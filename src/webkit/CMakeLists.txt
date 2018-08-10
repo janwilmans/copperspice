@@ -32,7 +32,11 @@ set(EXTRA_WEBKIT_LIBS
     CsNetwork${BUILD_ABI}
     CsScript${BUILD_ABI}
 )
-set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC) # that's not always wanted!
+
+if (! MSVC)
+   set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC)
+endif()
+
 set(EXTRA_WEBKIT_LDFLAGS)
 
 include_directories(

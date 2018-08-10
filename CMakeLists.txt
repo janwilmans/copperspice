@@ -98,6 +98,10 @@ else()
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined")
 endif()
 
+if (MSVC)
+   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d")
 add_definitions(-DQT_SHARED -DHAVE_CONFIG_H -DBUILD_DATE="${BUILD_DATE}")
 set(TOOLS_SUFFIX)
@@ -159,14 +163,6 @@ set_package_properties(OpenSSL PROPERTIES
     TYPE RECOMMENDED
 )
 
-find_package(Security)
-set_package_properties(Security PROPERTIES
-    PURPOSE "Required for HTTPS support"
-    DESCRIPTION "Support for secure network communications using Secure Trasnport for SSL and TLS"
-    URL "https://developer.apple.com/documentation/security/secure_transport"
-    TYPE RECOMMENDED
-)
-
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES
     PURPOSE "Required for compression support"
@@ -215,6 +211,16 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
         URL "http://www.gtk.org"
         TYPE RECOMMENDED
     )
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   find_package(Security)
+   set_package_properties(Security PROPERTIES
+       PURPOSE "Required for HTTPS support"
+       DESCRIPTION "Support for secure network communications using Secure Trasnport for SSL and TLS"
+       URL "https://developer.apple.com/documentation/security/secure_transport"
+       TYPE RECOMMENDED
+   )
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "(Linux|OpenBSD|FreeBSD|NetBSD|DragonFly)")
