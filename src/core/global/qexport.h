@@ -56,6 +56,14 @@
 
 #endif
 
+#ifdef _MSC_VER
+#define Q_DECL_EXPORT_SIGNAL
+
+#else
+#define Q_DECL_EXPORT_SIGNAL   Q_DECL_EXPORT
+
+#endif
+
 #ifndef Q_DECL_IMPORT
 #  if defined(Q_IS_WIN)
 #    define Q_DECL_IMPORT    __declspec(dllimport)
