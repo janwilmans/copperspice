@@ -35,7 +35,6 @@ void QDnsLookupRunnable::query(const int requestType, const QByteArray &name,
                                const QHostAddress &nameserver, QDnsLookupReply *reply)
 {
    // Perform DNS query
-   _DnsRecordA *dns_records  = nullptr;
    const QString requestName = QString::fromUtf8(name.data(), name.size());
 
    IP4_ARRAY srvList;
@@ -59,6 +58,12 @@ void QDnsLookupRunnable::query(const int requestType, const QByteArray &name,
          return;
       }
    }
+
+#ifdef Q_CC_MSVC
+   PDNS_RECORD   dns_records  = nullptr;
+#else
+   _DnsRecordA * dns_records  = nullptr;
+#endif
 
    const DNS_STATUS status = DnsQuery_UTF8(requestName.constData(), requestType, DNS_QUERY_STANDARD, &srvList, &dns_records, NULL);
 
