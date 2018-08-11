@@ -118,7 +118,7 @@ class cs_number<0>
          return cs_number<0>{};   \
       } \
       friend QMetaObject_T<classNameX>; \
-      Q_DECL_EXPORT static const QMetaObject_T<classNameX> & staticMetaObject()   \
+      static const QMetaObject_T<classNameX> & staticMetaObject()   \
       { \
          static std::atomic<bool> isCreated(false);                               \
          static std::atomic<QMetaObject_T<classNameX> *> createdObj(nullptr);     \
