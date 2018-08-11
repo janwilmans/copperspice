@@ -260,7 +260,7 @@ QSysInfo::WinVersion QSysInfo::windowsVersion()
 
 #ifdef QT_DEBUG
    {
-      QByteArray override = qgetenv("QT_WINVER_OVERRIDE");
+      QByteArray override = QByteArray();  // TODO_JCW: figure out crash at: qgetenv("QT_WINVER_OVERRIDE");
 
       if (override.isEmpty()) {
          return winver;

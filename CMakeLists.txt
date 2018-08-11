@@ -104,10 +104,6 @@ else()
    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined")
 endif()
 
-if(MSVC)
-   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-endif()
-
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d")
 add_definitions(-DQT_SHARED -DHAVE_CONFIG_H -DBUILD_DATE="${BUILD_DATE}")
 set(TOOLS_SUFFIX)

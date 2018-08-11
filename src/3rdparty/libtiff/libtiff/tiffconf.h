@@ -34,7 +34,7 @@
 #define TIFF_UINT8_T quint8
 
 /* Signed size type */
-#define TIFF_SSIZE_T ssize_t
+#define TIFF_SSIZE_T ptrdiff_t
 
 /* Pointer difference type */
 #define TIFF_PTRDIFF_T ptrdiff_t
