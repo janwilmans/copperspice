@@ -59,11 +59,17 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang|AppleClang)")
         message(SEND_ERROR "Failed to obtain machine from ${CMAKE_CXX_COMPILER}")
     endif()
     set(target "${DUMPMACHINE_OUTPUT}")
+
+elseif(MSVC)
+   message(WARNING "Compiling for MSVC, need to set the TARGET")
+   set(target "MSVC")
+
 else()
     message(WARNING
         "Your compiler (${CMAKE_CXX_COMPILER}) may not be supported. "
         "The plugin key which will be used is: ${CMAKE_SYSTEM}"
     )
+
     # more compiler handlers may be required, review CMAKE_LANG_COMPILER_ID
     set(target "${CMAKE_SYSTEM}")
 endif()
@@ -89,16 +95,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 14)
 
 if(APPLE)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-undefined,error")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error")
-    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-undefined,error")
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-undefined,error")
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error")
+   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,-undefined,error")
 else()
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-undefined")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
-    set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined")
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-undefined")
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--no-undefined")
 endif()
 
-if (MSVC)
+if(MSVC)
    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 

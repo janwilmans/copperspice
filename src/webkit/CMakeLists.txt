@@ -33,7 +33,7 @@ set(EXTRA_WEBKIT_LIBS
     CsScript${BUILD_ABI}
 )
 
-if (! MSVC)
+if(not MSVC)
    set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC)
 endif()
 
