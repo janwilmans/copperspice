@@ -146,7 +146,7 @@ class cs_number<0>
             return *newMeta;     \
          } \
       } \
-      virtual Q_DECL_EXPORT const QMetaObject *metaObject() const CS_OVERRIDE \
+      virtual const QMetaObject *metaObject() const CS_OVERRIDE \
       { \
          return &staticMetaObject(); \
       } \
