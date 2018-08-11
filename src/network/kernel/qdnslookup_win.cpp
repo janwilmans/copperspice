@@ -60,10 +60,14 @@ void QDnsLookupRunnable::query(const int requestType, const QByteArray &name,
    }
 
 #ifdef Q_CC_MSVC
-   PDNS_RECORD   dns_records  = nullptr;
+   using DNS_RECORD_PTR = PDNS_RECORD;
+
 #else
-   _DnsRecordA * dns_records  = nullptr;
+   using DNS_RECORD_PTR = _DnsRecordA *;
+
 #endif
+
+   DNS_RECORD_PTR dns_records  = nullptr;
 
    const DNS_STATUS status = DnsQuery_UTF8(requestName.constData(), requestType, DNS_QUERY_STANDARD, &srvList, &dns_records, NULL);
 
@@ -97,8 +101,8 @@ void QDnsLookupRunnable::query(const int requestType, const QByteArray &name,
          return;
    }
 
-   // Extract results.
-   for (_DnsRecordA *ptr = dns_records; ptr != NULL; ptr = ptr->pNext) {
+   // Extract results
+   for (DNS_RECORD_PTR ptr = dns_records; ptr != NULL; ptr = ptr->pNext) {
 
       const QString name = QUrl::fromAce(QString::fromUtf8(reinterpret_cast<const char *>(ptr->pName)));
 
