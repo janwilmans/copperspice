@@ -37,7 +37,7 @@
 #include <qstring.h>
 
 template <typename T>
-class Q_CORE_EXPORT QCFType
+class QCFType
 {
  public:
    inline QCFType(const T &t = 0) : type(t) {}

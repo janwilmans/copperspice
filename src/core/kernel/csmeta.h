@@ -306,7 +306,7 @@ bool QMetaMethod::invoke(QObject *object, Ts &&...Vs) const
 // **
 // cs_typeName_internal is a templated class
 template <class T, class = void>
-class Q_CORE_EXPORT cs_typeName_internal
+class cs_typeName_internal
 {
    public:
       static const QString &typeName();
