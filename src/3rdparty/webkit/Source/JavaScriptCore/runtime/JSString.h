@@ -59,7 +59,7 @@ namespace JSC {
     JSString* jsOwnedString(JSGlobalData*, const UString&); 
     JSString* jsOwnedString(ExecState*, const UString&); 
 
-    class JS_EXPORTCLASS JSString : public JSCell {
+    class JSString : public JSCell {    // TODO_JCW: removed JS_EXPORTCLASS, so  class JSString is nolonger exported, not sure if it needed was actually needed
     public:
         friend class JIT;
         friend class JSGlobalData;
@@ -337,7 +337,7 @@ namespace JSC {
             , m_fiberCount(0)
         {
         }
-        static const ClassInfo s_info;
+        static ClassInfo s_info;
 
         void resolveRope(ExecState*) const;
         void resolveRopeSlowCase(ExecState*, UChar*) const;
