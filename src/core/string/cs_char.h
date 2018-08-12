@@ -23,6 +23,8 @@ namespace CsString {
 
 #ifdef _WIN32
 
+#pragma warning( push , 0 ) // TODO_JCW: set warning level to 0, intentionally unbalanced to have global effect
+
 #ifdef BUILDING_LIB_CS_STRING
 # define LIB_CS_STRING_EXPORT     __declspec(dllexport)
 #else

@@ -33,9 +33,15 @@ set(EXTRA_WEBKIT_LIBS
     CsScript${BUILD_ABI}
 )
 
-if(!MSVC)
-   set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC)
-endif()
+if (MSVC)
+   set(EXTRA_WEBKIT_LDFLAGS
+      ${EXTRA_WEBKIT_LDFLAGS}
+      # TODO_JCW: can rid of the use of the /FORCE
+      /FORCE
+   )
+else(MSVC)
+    set(EXTRA_WEBKIT_CXXFLAGS -O2 -fPIC)
+ endif()
 
 set(EXTRA_WEBKIT_LDFLAGS)
 
@@ -2444,6 +2450,12 @@ set_target_properties(CsWebKit${BUILD_ABI} PROPERTIES
     COMPILE_FLAGS ${EXTRA_WEBKIT_CXXFLAGS}
     LINK_FLAGS ${EXTRA_WEBKIT_LDFLAGS}
 )
+
+if(MSVC)
+   target_compile_options(CsCore${BUILD_ABI}
+      PUBLIC /w /bigobj /DNOMINMAX
+   )
+endif()
 
 macro_generate_resources("${WEBKIT_SOURCES}")
 macro_generate_package(

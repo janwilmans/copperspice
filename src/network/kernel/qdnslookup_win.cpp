@@ -102,7 +102,7 @@ void QDnsLookupRunnable::query(const int requestType, const QByteArray &name,
    }
 
    // Extract results
-   for (DNS_RECORD_PTR ptr = dns_records; ptr != NULL; ptr = ptr->pNext) {
+   for (_DnsRecordA *ptr = reinterpret_cast<_DnsRecordA*>(dns_records); ptr != NULL; ptr = ptr->pNext) {        //TODO_JCW: BOOO!! reinterpret_cast BOOOO!!!
 
       const QString name = QUrl::fromAce(QString::fromUtf8(reinterpret_cast<const char *>(ptr->pName)));
 

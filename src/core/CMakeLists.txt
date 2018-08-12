@@ -108,7 +108,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
    set(EXTRA_CORE_LDFLAGS
       ${EXTRA_CORE_LDFLAGS}
-      -Wl,-luuid
+      # //TODO_JCW: get rid of this use of the FORCE
+      /FORCE            
    )
 endif()
 

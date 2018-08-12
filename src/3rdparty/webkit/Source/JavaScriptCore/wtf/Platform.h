@@ -62,6 +62,9 @@
 /* COMPILER(MSVC7_OR_LOWER) Microsoft Visual C++ 2003 or lower*/
 /* COMPILER(MSVC9_OR_LOWER) Microsoft Visual C++ 2008 or lower*/
 #if defined(_MSC_VER)
+
+#pragma warning( push , 0 ) // TODO_JCW: set warning level to 0, intentionally unbalanced to have global effect
+
 #define WTF_COMPILER_MSVC 1
 #if _MSC_VER < 1400
 #define WTF_COMPILER_MSVC7_OR_LOWER 1

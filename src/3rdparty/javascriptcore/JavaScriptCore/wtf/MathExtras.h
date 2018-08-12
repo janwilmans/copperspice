@@ -96,7 +96,7 @@ inline bool signbit(double x) { struct ieee_double *p = (struct ieee_double *)&x
 
 #endif
 
-#if COMPILER(MSVC) || COMPILER(RVCT)
+#if COMPILER(RVCT)
 
 // We must not do 'num + 0.5' or 'num - 0.5' because they can cause precision loss.
 static double round(double num)
@@ -125,7 +125,6 @@ inline double trunc(double num) { return num > 0 ? floor(num) : ceil(num); }
 
 inline bool isinf(double num) { return !_finite(num) && !_isnan(num); }
 inline bool isnan(double num) { return !!_isnan(num); }
-inline bool signbit(double num) { return _copysign(1.0, num) < 0; }
 
 inline double nextafter(double x, double y) { return _nextafter(x, y); }
 inline float nextafterf(float x, float y) { return x > y ? x - FLT_EPSILON : x + FLT_EPSILON; }
