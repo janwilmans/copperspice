@@ -4,6 +4,25 @@ Here is kitchensink compiled with Visual Studio 2017 Community Edition 15.7.6, i
 
 [![Kitchensink](art/cop1.png)](https://github.com/copperspice/copperspice)
 
+## Bleeding edge problems
+
+I still have problems building in certain configurations
+
+x86-Release: OK
+x64-Debug: linker error (below)
+
+consistent behaviour for 
+- Visual Studio 2017 Community Edition 15.8 **Preview 5**
+- Visual Studio 2017 Community Edition 15.7.6
+
+Specifically in x64-Debug configurations I ran into:
+
+```
+Error    LNK2019    unresolved external symbol _HBeginPaint referenced in function "private: static struct HDC__ * __cdecl WebCore::PluginView::hookedBeginPaint(struct HWND__ *,struct tagPAINTSTRUCT *)" 
+
+Error    LNK2019    unresolved external symbol _HEndPaint referenced in function "private: static int __cdecl WebCore::PluginView::hookedEndPaint(struct HWND__ *,struct tagPAINTSTRUCT const* )"
+```
+
 ### Introduction
 CopperSpice is of a set of C++ libraries used to develop cross-platform software applications. This is an open source project
 released under the LGPL V2.1 license. CopperSpice was derived from the Qt framework. Our motivation for developing CopperSpice was to
