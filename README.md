@@ -8,8 +8,8 @@ Here is kitchensink compiled with Visual Studio 2017 Community Edition 15.7.6, i
 
 I still have problems building in certain configurations
 
-x86-Release: OK
-x64-Debug: linker error (below)
+- x86-Release: OK
+- x64-Debug: linker error (below)
 
 consistent behaviour for 
 - Visual Studio 2017 Community Edition 15.8 **Preview 5**
