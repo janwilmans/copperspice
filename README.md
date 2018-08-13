@@ -1,6 +1,6 @@
 ## CopperSpice on Visual Studio 2017 Community Edition 15.7.6
 
-# Continuous integration status from appveyor (VS2017)
+Continuous integration status from appveyor (VS2017)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3p8n1cih9hg77bf9?svg=true)](https://ci.appveyor.com/project/janwilmans/copperspice)
 
