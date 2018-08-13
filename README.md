@@ -1,5 +1,9 @@
 ## CopperSpice on Visual Studio 2017 Community Edition 15.7.6
 
+# Continious integration status
+
+[![Build status](https://ci.appveyor.com/api/projects/status/3p8n1cih9hg77bf9?svg=true)](https://ci.appveyor.com/project/janwilmans/copperspice)
+
 Here is kitchensink compiled with Visual Studio 2017 Community Edition 15.7.6, in x86 release configuration.
 
 [![Kitchensink](art/cop1.png)](https://github.com/copperspice/copperspice)
