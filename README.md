@@ -8,20 +8,32 @@ Here is kitchensink compiled with Visual Studio 2017 Community Edition 15.7.6, i
 
 I still have problems building in certain configurations
 
-- x86-Release: OK
+- x86-Release: OK (Visual Studio 2017 Community Edition 15.7.6)
 - x64-Debug: linker error (below)
 
-consistent behaviour for 
+inconsistent behaviour for 
 - Visual Studio 2017 Community Edition 15.8 **Preview 5**
 - Visual Studio 2017 Community Edition 15.7.6
 
-Specifically in x64-Debug configurations I ran into:
+Specifically for Visual Studio 2017 Community Edition 15.8 **Preview 5** x64-Debug configuration I get:
 
 ```
 Error    LNK2019    unresolved external symbol _HBeginPaint referenced in function "private: static struct HDC__ * __cdecl WebCore::PluginView::hookedBeginPaint(struct HWND__ *,struct tagPAINTSTRUCT *)" 
 
 Error    LNK2019    unresolved external symbol _HEndPaint referenced in function "private: static int __cdecl WebCore::PluginView::hookedEndPaint(struct HWND__ *,struct tagPAINTSTRUCT const* )"
 ```
+
+also for Visual Studio 2017 Community Edition 15.8 **Preview 5** x86-Release configuration I get:
+
+```
+C:\Program Files (x86)\Microsoft Visual Studio\Preview\Community\Common7\IDE\MASM : warning A4018: invalid command-line option : -UHAVE_CONFIG_H
+   Assembling: ..\..\..\src\3rdparty\webkit\Source\WebCore\plugins\win\PaintHooks.asm
+C:\Program Files (x86)\Microsoft Visual Studio\Preview\src\3rdparty\webkit\Source\WebCore\plugins\win\PaintHooks.asm(27): error A2006: undefined symbol : r10
+C:\Program Files (x86)\Microsoft Visual Studio\Preview\src\3rdparty\webkit\Source\WebCore\plugins\win\PaintHooks.asm(42): error A2006: undefined symbol : r10
+  Microsoft (R) Macro Assembler Version 14.15.26720.0
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+```  
+  
 
 ### Introduction
 CopperSpice is of a set of C++ libraries used to develop cross-platform software applications. This is an open source project
