@@ -1,6 +1,6 @@
 ## Azure badges
 
-The Windows 10 builds are failed due to an Azure configuration issues, local builds are actually good.
+The Windows 10 builds are failing due to Azure configuration issues, local builds are actually good.
 
 [![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2017_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Windows 10, Microsoft Visual Studio 2017, Release x64
 
@@ -8,7 +8,7 @@ The Windows 10 builds are failed due to an Azure configuration issues, local bui
 
 [![Build 2Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=Ubuntu_16_04_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Ubuntu 18.04, GCC 7.4.0, Release x64
 
-The MacOS build is temporarly out of order.
+The MacOS build is temporarily out of order.
 
 [![Build 3Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) MacOS 10.13, Release X64
 
