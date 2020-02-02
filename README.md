@@ -1,12 +1,10 @@
 ## Azure badges
 
-[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2019_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+msvc_2019_Release_x64 [![Build 1Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2019_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
 
-[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=Ubuntu_16_04_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+Ubuntu_16_04_Release_x64 [![Build 2Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=Ubuntu_16_04_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
 
-[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
-
-[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+macos_10_13_Release_x64 [![Build 3Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
 
 ## CopperSpice
 
