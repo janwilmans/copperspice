@@ -16,7 +16,7 @@ jobs:
       mkdir logs
       pushd release_x64
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      cmake -DWITH_WEBKIT=NO -G "Visual Studio 15 2017 Win64" ..
+      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -G "Visual Studio 15 2017 Win64" ..
       popd
     displayName: 'Configure CMake Generator for VS2017'
   - task: UsePythonVersion@0
@@ -60,7 +60,7 @@ jobs:
       mkdir release_x64
       pushd release_x64
       :: Ninja, works fine locally, but on azure pipelines is missing the standard library includes, I could not track down why.
-      :: cmake -DWITH_WEBKIT=NO -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DMSVC_TOOLSET_VERSION=142 -G Ninja ..
+      :: cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DMSVC_TOOLSET_VERSION=142 -G Ninja ..
       :: use the latest defaults
       cmake -DWITH_WEBKIT=NO -G "Visual Studio 16 2019" -A x64  ..
       popd
