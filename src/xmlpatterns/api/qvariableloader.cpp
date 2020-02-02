@@ -21,8 +21,8 @@
 *
 ***********************************************************************/
 
-#include <QVariant>
-#include <QStringList>
+#include <qvariant.h>
+#include <qstringlist.h>
 
 #include "qanyuri_p.h"
 #include "qatomicstring_p.h"
@@ -95,9 +95,9 @@ using namespace QPatternist;
 SequenceType::Ptr VariableLoader::announceExternalVariable(const QXmlName name,
       const SequenceType::Ptr &declaredType)
 {
-   Q_UNUSED(declaredType);
-   const QVariant &variant = m_bindingHash.value(name);
+   (void) declaredType;
 
+   const QVariant &variant = m_bindingHash.value(name);
 
    if (variant.isNull()) {
       return SequenceType::Ptr();
