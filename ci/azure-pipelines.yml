@@ -68,7 +68,7 @@ jobs:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
-  - script: python ci\pype.py logs\copperspice_capture.txt -- cmake --verbose
+  - script: python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
     displayName: 'Build Copperspice'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
