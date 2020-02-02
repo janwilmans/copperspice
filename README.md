@@ -10,7 +10,7 @@ The Windows 10 builds are failed due to an Azure configuration issues, local bui
 
 The MacOS build is temporarly out of order.
 
-macos_10_13_Release_x64 [![Build 3Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) MacOS 10.13, Release X64
+[![Build 3Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) MacOS 10.13, Release X64
 
 
 ## CopperSpice
