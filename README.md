@@ -1,3 +1,7 @@
+## Azure badges
+
+[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+
 ## CopperSpice
 
 ### Introduction
