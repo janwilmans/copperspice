@@ -62,34 +62,14 @@ jobs:
       :: Ninja, works fine locally, but on azure pipelines is missing the standard library includes, I could not track down why.
       :: cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DMSVC_TOOLSET_VERSION=142 -G Ninja ..
       :: use the latest defaults
-      cmake -DWITH_WEBKIT=NO -G "Visual Studio 16 2019" -A x64  ..
+      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -G Ninja ..
       popd
     displayName: 'Configure CMake Generator for VS2019'
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
-  - script: python ci\pype.py logs\log_Core.txt -- cmake --build release_x64 --config Release --target CsCore
-    displayName: 'Build Core'
-  - script: python ci\pype.py logs\log_Network.txt -- cmake --build release_x64 --config Release --target CsNetwork
-    displayName: 'Build Network'
-  - script: python ci\pype.py logs\log_Xml.txt -- cmake --build release_x64 --config Release --target CsXml
-    displayName: 'Build Xml'
-  - script: python ci\pype.py logs\log_Gui.txt -- cmake --build release_x64 --config Release --target CsGui
-    displayName: 'Build Gui'
-  - script: python ci\pype.py logs\log_Svg.txt -- cmake --build release_x64 --config Release  --target CsSvg
-    displayName: 'Build Svg'
-  - script: python ci\pype.py logs\log_OpenGL.txt -- cmake --build release_x64 --config Release  --target CsOpenGL
-    displayName: 'Build OpenGL'
-  - script: python ci\pype.py logs\log_Multimedia.txt -- cmake --build release_x64 --config Release --target CsMultimedia --verbose
-    displayName: 'Build Multimedia'
-  - script: python ci\pype.py logs\log_Script.txt -- cmake --build release_x64 --config Release --target CsScript --verbose
-    displayName: 'Build Script'
-  - script: python ci\pype.py logs\log_Sql.txt -- cmake --build release_x64 --config Release --target CsSql --verbose
-    displayName: 'Build Sql'
-  - script: python ci\pype.py logs\log_XmlPatterns.txt -- cmake --build release_x64 --config Release --target CsXmlPatterns --verbose
-    displayName: 'Build XmlPatterns'
-  - script: python ci\pype.py logs\log_leftovers.txt -- cmake --build release_x64 --config Release --verbose
-    displayName: 'Build leftovers'
+  - script: python ci\pype.py logs\copperspice_capture.txt -- cmake --verbose
+    displayName: 'Build Copperspice'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
 
