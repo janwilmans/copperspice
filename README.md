@@ -1,10 +1,17 @@
 ## Azure badges
 
-msvc_2019_Release_x64 [![Build 1Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2019_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+The Windows 10 builds are failed due to an Azure configuration issues, local builds are actually good.
 
-Ubuntu_16_04_Release_x64 [![Build 2Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=Ubuntu_16_04_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2017_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Windows 10, Microsoft Visual Studio 2017, Release x64
 
-macos_10_13_Release_x64 [![Build 3Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master)
+[![Build 1Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2019_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Windows 10, Microsoft Visual Studio 2019, Release x64
+
+[![Build 2Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=Ubuntu_16_04_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Ubuntu 18.04, GCC 7.4.0, Release x64
+
+The MacOS build is temporarly out of order.
+
+macos_10_13_Release_x64 [![Build 3Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_13_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) MacOS 10.13, Release X64
+
 
 ## CopperSpice
 
