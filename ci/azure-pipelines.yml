@@ -15,12 +15,10 @@ jobs:
       mkdir release_x64
       mkdir logs
       pushd release_x64
-      ::cmake -DWITH_WEBKIT=NO -G "Visual Studio 15 2017" -A x64 -T v141,host=x64 ..
-      set Path=%ProgramFiles%\dotnet\;%WINDIR%;%WINDIR%\System32;%WINDIR%\System32\Wbem;%WINDIR%\System32\WindowsPowerShell\v1.0
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
-      cmake -DWITH_WEBKIT=NO -G Ninja ..
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      cmake -DWITH_WEBKIT=NO -G "Visual Studio 15 2017 Win64" ..
       popd
-    displayName: 'Configure CMake Generator for VS2017 x64 projects'
+    displayName: 'Configure CMake Generator for VS2017'
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
@@ -56,18 +54,17 @@ jobs:
   steps:
   - script: |
       echo on
-      set Path=%ProgramFiles%\dotnet\;%WINDIR%;%WINDIR%\System32;%WINDIR%\System32\Wbem;%WINDIR%\System32\WindowsPowerShell\v1.0
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       set
       mkdir logs
       mkdir release_x64
       pushd release_x64
       :: Ninja, works fine locally, but on azure pipelines is missing the standard library includes, I could not track down why.
-      cmake -DWITH_WEBKIT=NO -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DMSVC_TOOLSET_VERSION=142 -G Ninja ..
+      :: cmake -DWITH_WEBKIT=NO -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DMSVC_TOOLSET_VERSION=142 -G Ninja ..
       :: use the latest defaults
-      ::cmake -DWITH_WEBKIT=NO -G "Visual Studio 16 2019" -A x64  ..
+      cmake -DWITH_WEBKIT=NO -G "Visual Studio 16 2019" -A x64  ..
       popd
-    displayName: 'Configure CMake Generator for VS2019 + Ninja'
+    displayName: 'Configure CMake Generator for VS2019'
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.6'
@@ -96,7 +93,7 @@ jobs:
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
 
-- job: Ubuntu_16_04_Release_x64
+- job: Ubuntu_18_04_Release_x64
   timeoutInMinutes: 0
   pool:
     vmImage: Ubuntu-18.04
