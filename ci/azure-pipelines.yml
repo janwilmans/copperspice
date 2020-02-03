@@ -62,7 +62,7 @@ jobs:
       mkdir release_x64
       pushd release_x64
       cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-      cmake --build . --verbose
+      python ci\pype.py logs\copperspice_capture.txt cmake --build . --verbose
       popd
     displayName: 'Configure CMake Generator for VS2019'
   - publish: $(System.DefaultWorkingDirectory)/logs
