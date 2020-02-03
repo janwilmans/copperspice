@@ -52,6 +52,9 @@ jobs:
   pool:
     vmImage: 'windows-2019'
   steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       set
@@ -59,13 +62,9 @@ jobs:
       mkdir release_x64
       pushd release_x64
       cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
+      python ci\pype.py logs\copperspice_capture.txt -- cmake --build . --verbose
       popd
     displayName: 'Configure CMake Generator for VS2019 via Ninja'
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-  - script: python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
-    displayName: 'Build Copperspice'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
 
