@@ -54,6 +54,7 @@ jobs:
   steps:
   - script: |
       echo on
+      set PATH=%ProgramFiles%\dotnet\;%WINDIR%;%WINDIR%\System32;%WINDIR%\System32\Wbem;%WINDIR%\System32\WindowsPowerShell\v1.0
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       set
       mkdir logs
@@ -62,7 +63,7 @@ jobs:
       :: Ninja, works fine locally, but on azure pipelines is missing the standard library includes, I could not track down why.
       :: cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" -DMSVC_TOOLSET_VERSION=142 -G Ninja ..
       :: use the latest defaults
-      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -G Ninja ..
+      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -G Ninja ..
       popd
     displayName: 'Configure CMake Generator for VS2019'
   - task: UsePythonVersion@0
