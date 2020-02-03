@@ -62,11 +62,9 @@ jobs:
       mkdir release_x64
       pushd release_x64
       cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-      cmake . --verbose
+      cmake --build . --verbose
       popd
     displayName: 'Configure CMake Generator for VS2019'
-  - script: cmake --build release_x64
-    displayName: 'Build Copperspice'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
 
