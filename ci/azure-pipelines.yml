@@ -50,7 +50,7 @@ jobs:
 - job: msvc_2019_Release_x64
   timeoutInMinutes: 0
   pool:
-    vmImage: windows-latest
+    vmImage: 'windows-2019'
   steps:
   - script: |
       echo on
