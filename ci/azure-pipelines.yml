@@ -10,10 +10,8 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
   - script: |
+      set
       mkdir release_x64
       mkdir logs
       pushd release_x64
@@ -21,6 +19,9 @@ jobs:
       cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -G "Visual Studio 15 2017 Win64" ..
       popd
     displayName: 'Configure CMake Generator for VS2017'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
   - script: python ci\pype.py logs\log_Core.txt -- cmake --build release_x64 --config Release --target CsCore --verbose
     displayName: 'Build Core'
   - script: python ci\pype.py logs\log_Network.txt -- cmake --build release_x64 --config Release --target CsNetwork --verbose
@@ -49,23 +50,22 @@ jobs:
 - job: msvc_2019_Release_x64
   timeoutInMinutes: 0
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2019'
   steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
   - script: |
-      echo on
-      where python
-      set PATH=%ProgramFiles%\dotnet\;%WINDIR%;%WINDIR%\System32;%WINDIR%\System32\Wbem;%WINDIR%\System32\WindowsPowerShell\v1.0
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      set
       mkdir logs
       mkdir release_x64
       pushd release_x64
-      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -G Ninja ..
-      python ci\pype.py logs\copperspice_capture.txt cmake --build . --verbose
+      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/MinGW/bin;C:/Strawberry/c/bin;C:/Program Files (x86)/LLVM/bin" -G Ninja ..
       popd
-    displayName: 'Configure CMake Generator for VS2019'
+    displayName: 'Configure CMake Generator for VS2019 via Ninja'
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+  - script: python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
+    displayName: 'Build Copperspice'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
 
@@ -75,6 +75,7 @@ jobs:
     vmImage: Ubuntu-18.04
   steps:
   - script: |
+      set
       sudo apt-get update
       sudo apt-get -yq install ninja-build libfreetype6-dev libfontconfig1-dev libglib2.0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libice-dev libaudio-dev libgl1-mesa-dev libc6-dev libsm-dev libxcursor-dev libxext-dev libxfixes-dev libxi-dev libxinerama-dev libxrandr-dev libxrender-dev  libxt6 libx11-dev  libpulse-dev libasound2-dev  libxcb1-dev libx11-xcb-dev  libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-shm0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev libxkbcommon-dev libxkbcommon-x11-dev
       mkdir release_x64
