@@ -65,7 +65,7 @@ jobs:
       cmake . --verbose
       popd
     displayName: 'Configure CMake Generator for VS2019'
-  - script: cmake --build release_x64 --verbose
+  - script: cmake --build release_x64
     displayName: 'Build Copperspice'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
