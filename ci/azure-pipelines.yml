@@ -64,7 +64,7 @@ jobs:
       cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
       popd
       python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
-    displayName: 'Configure CMake Generator for VS2019 via Ninja'
+    displayName: 'Build using VS2019 via Ninja'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs
 
