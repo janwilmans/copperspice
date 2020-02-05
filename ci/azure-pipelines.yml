@@ -45,7 +45,7 @@ jobs:
   - script: python ci\pype.py logs\log_leftovers.txt -- cmake --build release_x64 --config Release --verbose
     displayName: 'Build leftovers'
   - publish: $(System.DefaultWorkingDirectory)/logs
-    artifact: logs
+    artifact: logs_vs2017
 
 - job: msvc_2019_Release_x64
   timeoutInMinutes: 0
@@ -66,7 +66,7 @@ jobs:
       python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
     displayName: 'Build using VS2019 via Ninja'
   - publish: $(System.DefaultWorkingDirectory)/logs
-    artifact: logs
+    artifact: logs_vs2019
 
 - job: Ubuntu_18_04_Release_x64
   timeoutInMinutes: 0
