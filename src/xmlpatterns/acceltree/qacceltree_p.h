@@ -32,8 +32,6 @@
 #include <qitem_p.h>
 #include <qnamepool_p.h>
 
-QT_BEGIN_NAMESPACE
-
 namespace QPatternist {
 template<bool> class AccelTreeBuilder;
 
@@ -304,9 +302,5 @@ class AccelTree : public QAbstractXmlNodeModel
    QHash<QXmlName::LocalNameCode, PreNumber> m_IDs;
 };
 }
-
-Q_DECLARE_TYPEINFO(QPatternist::AccelTree::BasicNodeData, Q_MOVABLE_TYPE);
-
-QT_END_NAMESPACE
 
 #endif

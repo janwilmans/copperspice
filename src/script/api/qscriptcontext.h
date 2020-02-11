@@ -24,7 +24,7 @@
 #ifndef QSCRIPTCONTEXT_H
 #define QSCRIPTCONTEXT_H
 
-#include <QtScript/qscriptvalue.h>
+#include <qscriptvalue.h>
 
 class QScriptContextPrivate;
 
@@ -57,7 +57,7 @@ class Q_SCRIPT_EXPORT QScriptContext
    QScriptValue argument(int index) const;
    QScriptValue argumentsObject() const;
 
-   QScriptValueList scopeChain() const;
+   QList<QScriptValue> scopeChain() const;
    void pushScope(const QScriptValue &object);
    QScriptValue popScope();
 

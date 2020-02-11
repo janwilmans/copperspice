@@ -22,17 +22,18 @@
 ***********************************************************************/
 
 #include "config.h"
-#include "qscriptqobject_p.h"
+#include <qscriptqobject_p.h>
 
-#include <QtCore/qmetaobject.h>
-#include <QtCore/qvarlengtharray.h>
-#include <QtCore/qdebug.h>
-#include <QtScript/qscriptable.h>
-#include "qscriptengine_p.h"
-#include "qscriptable_p.h"
-#include "qscriptcontext_p.h"
-#include "qscriptfunction_p.h"
-#include "qscriptactivationobject_p.h"
+#include <qmetaobject.h>
+#include <qvarlengtharray.h>
+#include <qdebug.h>
+#include <qscriptable.h>
+
+#include <qscriptengine_p.h>
+#include <qscriptable_p.h>
+#include <qscriptcontext_p.h>
+#include <qscriptfunction_p.h>
+#include <qscriptactivationobject_p.h>
 
 #include "Error.h"
 #include "PrototypeFunction.h"
@@ -140,9 +141,6 @@ class QObjectConnectionManager: public QObject
    static const QMetaObject &staticMetaObject();
    virtual const QMetaObject *metaObject() const;
 
-   // qt_metacast()   removed 1/11/2014
-   // qt_metacall()   removed 1/11/2014
-
    void execute(int slotIndex, void **argv);
    void clearMarkBits();
    int mark(JSC::MarkStack &);
@@ -249,15 +247,9 @@ static int indexOfMetaEnum(const QMetaObject *meta, const QString &str)
    return -1;
 }
 
-static inline QScriptable *scriptableFromQObject(QObject *qobj)
+static inline QScriptable *scriptableFromQObject(QObject *qobject)
 {
-   /*  BROOM (script)
-       void *ptr = qobj->qt_metacast("QScriptable");
-   */
-
-   void *ptr = nullptr;   // temp code
-
-   return reinterpret_cast<QScriptable *>(ptr);
+   return dynamic_cast<QScriptable *>(qobject);
 }
 
 QtFunction::QtFunction(JSC::JSValue object, int initialIndex, bool maybeOverloaded,
@@ -464,7 +456,9 @@ class QScriptMetaMethod
 
    inline QScriptMetaMethod(const QVector<QScriptMetaType> &types)
       : m_types(types), m_firstUnresolvedIndex(-1) {
+
       QVector<QScriptMetaType>::const_iterator it;
+
       for (it = m_types.constBegin(); it != m_types.constEnd(); ++it) {
          if ((*it).kind() == QScriptMetaType::Unresolved) {
             m_firstUnresolvedIndex = it - m_types.constBegin();
@@ -472,6 +466,7 @@ class QScriptMetaMethod
          }
       }
    }
+
    inline bool isValid() const {
       return !m_types.isEmpty();
    }
@@ -525,9 +520,12 @@ struct QScriptMetaArguments {
 
    inline QScriptMetaArguments(int dist, int idx, const QScriptMetaMethod &mtd,
       const QVarLengthArray<QVariant, 9> &as)
-      : matchDistance(dist), index(idx), method(mtd), args(as) { }
+      : matchDistance(dist), index(idx), method(mtd), args(as)
+   { }
+
    inline QScriptMetaArguments()
-      : index(-1) { }
+      : index(-1)
+   { }
 
    inline bool isValid() const {
       return (index != -1);
@@ -868,12 +866,14 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
                   case QMetaType::QWidgetStar:
                      // perfect
                      break;
+
                   default:
-                     if (!argType.name().endsWith('*')) {
+                     if (! argType.name().endsWith('*')) {
                         matchDistance += 10;
                      }
                      break;
                }
+
             } else {
                matchDistance += 10;
             }
@@ -885,18 +885,18 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
       }
 
       if (converted) {
-         if ((scriptArgs.size() == (size_t)mtd.argumentCount())
-            && (matchDistance == 0)) {
+         if ((scriptArgs.size() == (size_t)mtd.argumentCount()) && (matchDistance == 0)) {
             // perfect match, use this one
             chosenMethod = mtd;
-            chosenIndex = index;
+            chosenIndex  = index;
             break;
+
          } else {
             bool redundant = false;
-            if ((callType != QMetaMethod::Constructor)
-               && (index < meta->methodOffset())) {
+            if ((callType != QMetaMethod::Constructor) && (index < meta->methodOffset())) {
                // it is possible that a virtual method is redeclared in a subclass,
                // in which case we want to ignore the superclass declaration
+
                for (int i = 0; i < candidates.size(); ++i) {
                   const QScriptMetaArguments &other = candidates.at(i);
                   if (mtd.types() == other.method.types()) {
@@ -905,22 +905,25 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
                   }
                }
             }
+
             if (!redundant) {
                QScriptMetaArguments metaArgs(matchDistance, index, mtd, args);
                if (candidates.isEmpty()) {
                   candidates.append(metaArgs);
+
                } else {
                   const QScriptMetaArguments &otherArgs = candidates.at(0);
-                  if ((args.count() > otherArgs.args.count())
-                     || ((args.count() == otherArgs.args.count())
+                  if ((args.count() > otherArgs.args.count()) || ((args.count() == otherArgs.args.count())
                         && (matchDistance <= otherArgs.matchDistance))) {
                      candidates.prepend(metaArgs);
+
                   } else {
                      candidates.append(metaArgs);
                   }
                }
             }
          }
+
       } else if (mtd.fullyResolved()) {
          conversionFailed.append(index);
       }
@@ -1026,35 +1029,41 @@ struct QtMethodCaller {
    QtMethodCaller(QObject *o)
       : thisQObject(o)
    {}
+
    JSC::JSValue operator()(JSC::ExecState *exec, QMetaMethod::MethodType callType,
       const QMetaObject *meta, const QScriptMetaMethod &chosenMethod,
       int chosenIndex, const QVarLengthArray<QVariant, 9> &args) {
       JSC::JSValue result;
 
+
       QVarLengthArray<void *, 9> array(args.count());
       void **params = array.data();
+
       for (int i = 0; i < args.count(); ++i) {
          const QVariant &v = args[i];
+
          switch (chosenMethod.type(i).kind()) {
             case QScriptMetaType::Variant:
                params[i] = const_cast<QVariant *>(&v);
                break;
+
             case QScriptMetaType::MetaType:
             case QScriptMetaType::MetaEnum:
             case QScriptMetaType::Unresolved:
                params[i] = const_cast<void *>(v.constData());
                break;
+
             default:
                Q_ASSERT(0);
          }
       }
 
-      QScriptable *scriptable = 0;
+      QScriptable *scriptable = nullptr;
       if (thisQObject) {
          scriptable = scriptableFromQObject(thisQObject);
       }
 
-      QScriptEngine *oldEngine = 0;
+      QScriptEngine *oldEngine = nullptr;
       QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(exec);
 
       if (scriptable) {
@@ -1070,14 +1079,13 @@ struct QtMethodCaller {
       if (callType == QMetaMethod::Constructor) {
          Q_ASSERT(meta != 0);
 
-         /*  BROOM (script)
+         /* emerald (script, hold)
               meta->static_metacall(QMetaObject::CreateInstance, chosenIndex, params);
          */
 
-
       } else {
 
-         /* BROOM (script)
+         /* emerald (script, hold)
               QMetaObject::metacall(thisQObject, QMetaObject::InvokeMetaMethod, chosenIndex, params);
          */
       }
@@ -1088,8 +1096,10 @@ struct QtMethodCaller {
 
       if (exec->hadException()) {
          result = exec->exception() ; // propagate
+
       } else {
          QScriptMetaType retType = chosenMethod.returnType();
+
          if (retType.isVariant()) {
             result = QScriptEnginePrivate::jscValueFromVariant(exec, *(QVariant *)params[0]);
 
@@ -1113,10 +1123,10 @@ struct QtMethodCaller {
 
 static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType callType,
    QObject *thisQObject, const JSC::ArgList &scriptArgs,
-   const QMetaObject *meta, int initialIndex,
-   bool maybeOverloaded)
+   const QMetaObject *meta, int initialIndex, bool maybeOverloaded)
 {
    QtMethodCaller caller(thisQObject);
+
    return delegateQtMethod<QtMethodCaller>(exec, callType, scriptArgs, meta,
          initialIndex, maybeOverloaded, caller);
 }
@@ -1260,32 +1270,33 @@ JSC::JSValue JSC_HOST_CALL QtPropertyFunction::call(
    return qfun->execute(exec, thisValue, args);
 }
 
-JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec,
-   JSC::JSValue thisValue,
-   const JSC::ArgList &args)
+JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec, JSC::JSValue thisValue, const JSC::ArgList &args)
 {
    JSC::JSValue result = JSC::jsUndefined();
 
-   QScriptEnginePrivate *engine = scriptEngineFromExec(exec);
+   QScriptEnginePrivate *engine  = scriptEngineFromExec(exec);
    JSC::ExecState *previousFrame = engine->currentFrame;
    engine->currentFrame = exec;
 
    JSC::JSValue qobjectValue = engine->toUsableValue(thisValue);
    QObject *qobject = QScriptEnginePrivate::toQObject(exec, qobjectValue);
-   while ((!qobject || (qobject->metaObject() != data->meta))
+
+   while ((! qobject || (qobject->metaObject() != data->meta))
       && JSC::asObject(qobjectValue)->prototype().isObject()) {
       qobjectValue = JSC::asObject(qobjectValue)->prototype();
       qobject = QScriptEnginePrivate::toQObject(exec, qobjectValue);
    }
-   Q_ASSERT_X(qobject, Q_FUNC_INFO, "this-object must be a QObject");
+   Q_ASSERT_X(qobject, Q_FUNC_INFO, "This object must be a QObject");
 
    QMetaProperty prop = data->meta->property(data->index);
    Q_ASSERT(prop.isScriptable());
+
    if (args.size() == 0) {
       // get
       if (prop.isValid()) {
-         QScriptable *scriptable = scriptableFromQObject(qobject);
-         QScriptEngine *oldEngine = 0;
+         QScriptable *scriptable  = scriptableFromQObject(qobject);
+         QScriptEngine *oldEngine = nullptr;
+
          if (scriptable) {
             engine->pushContext(exec, thisValue, args, this);
             oldEngine = QScriptablePrivate::get(scriptable)->engine;
@@ -1301,23 +1312,23 @@ JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec,
 
          result = QScriptEnginePrivate::jscValueFromVariant(exec, v);
       }
+
    } else {
       // set
       JSC::JSValue arg = args.at(0);
       QVariant v;
 
-      if (prop.isEnumType() && arg.isString()
-         && !engine->hasDemarshalFunction(prop.userType())) {
-         // give QMetaProperty::write() a chance to convert from
-         // string to enum value
+      if (prop.isEnumType() && arg.isString() && ! engine->hasDemarshalFunction(prop.userType())) {
+         // give QMetaProperty::write() a chance to convert from string to enum value
          v = (QString)arg.toString(exec);
 
       } else {
          v = variantFromValue(exec, prop.userType(), arg);
       }
 
-      QScriptable *scriptable = scriptableFromQObject(qobject);
-      QScriptEngine *oldEngine = 0;
+      QScriptable *scriptable  = scriptableFromQObject(qobject);
+      QScriptEngine *oldEngine = nullptr;
+
       if (scriptable) {
          engine->pushContext(exec, thisValue, args, this);
          oldEngine = QScriptablePrivate::get(scriptable)->engine;
@@ -1333,7 +1344,9 @@ JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec,
 
       result = arg;
    }
+
    engine->currentFrame = previousFrame;
+
    return result;
 }
 
@@ -1899,14 +1912,16 @@ void QObjectDelegate::markChildren(QScriptObject *object, JSC::MarkStack &markSt
 
 bool QObjectDelegate::compareToObject(QScriptObject *, JSC::ExecState *exec, JSC::JSObject *o2)
 {
-   if (!o2->inherits(&QScriptObject::info)) {
+   (void) exec;
+
+   if (! o2->inherits(&QScriptObject::info)) {
       return false;
    }
 
    QScriptObject *object = static_cast<QScriptObject *>(o2);
    QScriptObjectDelegate *delegate = object->delegate();
 
-   if (!delegate || (delegate->type() != QScriptObjectDelegate::QtObject)) {
+   if (! delegate || (delegate->type() != QScriptObjectDelegate::QtObject)) {
       return false;
    }
 
@@ -2334,10 +2349,8 @@ QMetaObjectPrototype::QMetaObjectPrototype(JSC::ExecState *exec, WTF::PassRefPtr
       JSC::DontEnum);
 }
 
-
 const QMetaObject &QObjectConnectionManager::staticMetaObject()
 {
-   // BROOM (script)
    return QObject::staticMetaObject();
 }
 
@@ -2494,8 +2507,8 @@ int QObjectConnectionManager::mark(JSC::MarkStack &markStack)
 
          if (!c.marked) {
             if (c.hasWeaklyReferencedSender()) {
-               // Don't mark the connection; we don't want the script-owned
-               // sender object to stay alive merely due to a connection.
+               // do not mark the connection, we do not want the script-owned
+               // sender object to stay alive merely due to a connection
             } else {
                c.mark(markStack);
                ++markedCount;
@@ -2503,6 +2516,7 @@ int QObjectConnectionManager::mark(JSC::MarkStack &markStack)
          }
       }
    }
+
    return markedCount;
 }
 
@@ -2516,8 +2530,11 @@ bool QObjectConnectionManager::addSignalHandler(QObject *sender, int signalIndex
    QVector<QObjectConnection> &cs = connections[signalIndex];
    int absSlotIndex = slotCounter + metaObject()->methodOffset();
 
+   (void) sender;
+   (void) type;
 
-   /* BROOM (script)
+   /* emerald (script, hold)
+      int absSlotIndex = slotCounter + metaObject()->methodOffset();
       bool ok = QMetaObject::connect(sender, signalIndex, this, absSlotIndex, type);
    */
 
@@ -2531,9 +2548,11 @@ bool QObjectConnectionManager::addSignalHandler(QObject *sender, int signalIndex
    return ok;
 }
 
-bool QObjectConnectionManager::removeSignalHandler(QObject *sender, int signalIndex, JSC::JSValue receiver,
-   JSC::JSValue slot)
+bool QObjectConnectionManager::removeSignalHandler(QObject *sender, int signalIndex,
+                  JSC::JSValue receiver, JSC::JSValue slot)
 {
+   (void) sender;
+
    if (connections.size() <= signalIndex) {
       return false;
    }
@@ -2545,7 +2564,7 @@ bool QObjectConnectionManager::removeSignalHandler(QObject *sender, int signalIn
 
       if (c.hasTarget(receiver, slot)) {
 
-         /* BROOM (script)
+         /* emerald (script, hold)
                      int absSlotIndex = c.slotIndex + metaObject()->methodOffset();
                      bool ok = QMetaObject::disconnect(sender, signalIndex, this, absSlotIndex);
          */

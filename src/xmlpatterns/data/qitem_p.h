@@ -31,8 +31,6 @@
 #include <QUrl>
 #include <QVariant>
 
-QT_BEGIN_NAMESPACE
-
 template<typename T> class QList;
 template<typename T> class QVector;
 template<typename T> class QAbstractXmlForwardIterator;
@@ -438,8 +436,4 @@ inline QXmlItem::QXmlItem(const QPatternist::Item &i) : m_node(i.node)
    }
 }
 
-Q_DECLARE_TYPEINFO(QPatternist::Item::Iterator::Ptr, Q_MOVABLE_TYPE);
-Q_DECLARE_TYPEINFO(QPatternist::AtomicValue, Q_MOVABLE_TYPE);
-
-QT_END_NAMESPACE
 #endif

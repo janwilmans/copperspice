@@ -28,9 +28,8 @@
 #include <qcomparisonplatform_p.h>
 #include <qsinglecontainer_p.h>
 
-QT_BEGIN_NAMESPACE
-
 namespace QPatternist {
+
 class ReturnOrderBy;
 
 class OrderBy : public SingleContainer
@@ -124,10 +123,6 @@ class OrderBy : public SingleContainer
    ReturnOrderBy *const        m_returnOrderBy;
 };
 
-/* TODO Q_DECLARE_TYPEINFO(OrderBy::OrderSpec, Q_MOVABLE_TYPE); Breaks,
- * probably because it's nested. */
 }
-
-QT_END_NAMESPACE
 
 #endif

@@ -39,8 +39,7 @@ class QDateTime;
 class QMetaObject;
 
 typedef QList<QScriptValue> QScriptValueList;
-
-typedef double qsreal;
+using qsreal = double;
 
 class QScriptValuePrivate;
 class QScriptEnginePrivate;
@@ -81,7 +80,6 @@ class Q_SCRIPT_EXPORT QScriptValue
 
  public:
    QScriptValue();
-   ~QScriptValue();
    QScriptValue(const QScriptValue &other);
    QScriptValue(QScriptEngine *engine, SpecialValue val);
    QScriptValue(QScriptEngine *engine, bool val);
@@ -90,13 +88,14 @@ class Q_SCRIPT_EXPORT QScriptValue
    QScriptValue(QScriptEngine *engine, qsreal val);
    QScriptValue(QScriptEngine *engine, const QString &val);
 
-
    QScriptValue(SpecialValue value);
    QScriptValue(bool value);
    QScriptValue(int value);
    QScriptValue(uint value);
    QScriptValue(qsreal value);
    QScriptValue(const QString &value);
+
+   ~QScriptValue();
 
    QScriptValue &operator=(const QScriptValue &other);
 
@@ -168,10 +167,11 @@ class Q_SCRIPT_EXPORT QScriptValue
       const QScriptString &name, const ResolveFlags &mode = ResolvePrototype) const;
 
    QScriptValue call(const QScriptValue &thisObject = QScriptValue(),
-      const QScriptValueList &args = QScriptValueList());
-   QScriptValue call(const QScriptValue &thisObject,
-      const QScriptValue &arguments);
-   QScriptValue construct(const QScriptValueList &args = QScriptValueList());
+      const QList<QScriptValue> &args = QList<QScriptValue>());
+
+   QScriptValue call(const QScriptValue &thisObject, const QScriptValue &arguments);
+
+   QScriptValue construct(const QList<QScriptValue> &args = QList<QScriptValue>());
    QScriptValue construct(const QScriptValue &arguments);
 
    QScriptValue data() const;

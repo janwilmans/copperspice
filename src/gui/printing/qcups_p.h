@@ -31,8 +31,8 @@
 
 #ifndef QT_NO_CUPS
 
-// emerald - Define these temporarily so they can be used in the dialogs without a 
-// circular reference to QCupsPrintEngine in the plugin.  
+// emerald - Define these temporarily so they can be used in the dialogs without a
+// circular reference to QCupsPrintEngine in the plugin.
 // Move back to qcupsprintengine_p.h in the plugin once all usage removed from the dialogs.
 
 #define PPK_CupsOptions QPrintEngine::PrintEnginePropertyKey(0xfe00)
@@ -107,12 +107,6 @@ class Q_GUI_EXPORT QCUPSSupport
 
    static void setPageRange(QPrinter *printer, int pageFrom, int pageTo);
 };
-
-Q_DECLARE_TYPEINFO(QCUPSSupport::JobHoldUntil,        Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(QCUPSSupport::BannerPage,          Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(QCUPSSupport::PageSet,             Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(QCUPSSupport::PagesPerSheetLayout, Q_PRIMITIVE_TYPE);
-Q_DECLARE_TYPEINFO(QCUPSSupport::PagesPerSheet,       Q_PRIMITIVE_TYPE);
 
 Q_DECLARE_METATYPE(QCUPSSupport::JobHoldUntil)
 Q_DECLARE_METATYPE(QCUPSSupport::BannerPage)
