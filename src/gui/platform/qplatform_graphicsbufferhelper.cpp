@@ -113,20 +113,24 @@ bool QPlatformGraphicsBufferHelper::bindSWToTexture(const QPlatformGraphicsBuffe
    bool premultiplied = false;
    QImage::Format imageformat = QImage::toImageFormat(graphicsBuffer->format());
    QImage image(graphicsBuffer->data(), size.width(), size.height(), graphicsBuffer->bytesPerLine(), imageformat);
+
    if (graphicsBuffer->bytesPerLine() != (size.width() * 4)) {
       needsConversion = true;
+
    } else {
       switch (imageformat) {
          case QImage::Format_ARGB32_Premultiplied:
             premultiplied = true;
-         // no break
+            [[fallthrough]];
+
          case QImage::Format_RGB32:
          case QImage::Format_ARGB32:
             swizzle = true;
             break;
          case QImage::Format_RGBA8888_Premultiplied:
             premultiplied = true;
-         // no break
+            [[fallthrough]];
+
          case QImage::Format_RGBX8888:
          case QImage::Format_RGBA8888:
             break;
@@ -140,6 +144,7 @@ bool QPlatformGraphicsBufferHelper::bindSWToTexture(const QPlatformGraphicsBuffe
                needsConversion = true;
             }
             break;
+
          case QImage::Format_RGB30:
          case QImage::Format_A2RGB30_Premultiplied:
             if (!ctx->isOpenGLES() || ctx->format().majorVersion() >= 3) {
@@ -151,6 +156,7 @@ bool QPlatformGraphicsBufferHelper::bindSWToTexture(const QPlatformGraphicsBuffe
                needsConversion = true;
             }
             break;
+
          default:
             needsConversion = true;
             break;
@@ -204,10 +210,11 @@ bool QPlatformGraphicsBufferHelper::bindSWToTexture(const QPlatformGraphicsBuffe
    return true;
 
 #else
-   Q_UNUSED(graphicsBuffer)
-   Q_UNUSED(swizzleRandB)
-   Q_UNUSED(premultipliedB)
-   Q_UNUSED(subRect)
+   (void) graphicsBuffer;
+   (void) swizzleRandB;
+   (void) premultipliedB;
+   (void) subRect;
+
    return false;
 
 #endif // QT_NO_OPENGL
