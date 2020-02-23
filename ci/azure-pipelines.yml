@@ -61,7 +61,7 @@ jobs:
       mkdir logs
       mkdir release_x64
       pushd release_x64
-      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
+      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
       popd
       python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
     displayName: 'Build using VS2019 via Ninja'
