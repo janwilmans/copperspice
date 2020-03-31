@@ -24,14 +24,12 @@
 #ifndef QSTATEMACHINE_H
 #define QSTATEMACHINE_H
 
-#include <QtCore/qstate.h>
-#include <QtCore/qcoreevent.h>
-#include <QtCore/qlist.h>
-#include <QtCore/qobject.h>
-#include <QtCore/qset.h>
-#include <QtCore/qvariant.h>
-
-QT_BEGIN_NAMESPACE
+#include <qcoreevent.h>
+#include <qlist.h>
+#include <qobject.h>
+#include <qstate.h>
+#include <qset.h>
+#include <qvariant.h>
 
 #ifndef QT_NO_STATEMACHINE
 
@@ -41,10 +39,15 @@ class QAbstractAnimation;
 class Q_CORE_EXPORT QStateMachine : public QState
 {
    CORE_CS_OBJECT(QStateMachine)
-  
+
    CORE_CS_PROPERTY_READ(errorString, errorString)
+
    CORE_CS_PROPERTY_READ(globalRestorePolicy, globalRestorePolicy)
    CORE_CS_PROPERTY_WRITE(globalRestorePolicy, setGlobalRestorePolicy)
+
+   CORE_CS_PROPERTY_READ(running, isRunning)
+   CORE_CS_PROPERTY_WRITE(running, setRunning)
+   CORE_CS_PROPERTY_NOTIFY(running, runningChanged)
 
 #ifndef QT_NO_ANIMATION
    CORE_CS_PROPERTY_READ(animated, isAnimated)
@@ -59,13 +62,15 @@ class Q_CORE_EXPORT QStateMachine : public QState
       SignalEvent(QObject *sender, int signalIndex, const QList<QVariant> &arguments);
       ~SignalEvent();
 
-      inline QObject *sender() const {
+      QObject *sender() const {
          return m_sender;
       }
-      inline int signalIndex() const {
+
+      int signalIndex() const {
          return m_signalIndex;
       }
-      inline QList<QVariant> arguments() const {
+
+      QList<QVariant> arguments() const {
          return m_arguments;
       }
 
@@ -83,10 +88,11 @@ class Q_CORE_EXPORT QStateMachine : public QState
       WrappedEvent(QObject *object, QEvent *event);
       ~WrappedEvent();
 
-      inline QObject *object() const {
+      QObject *object() const {
          return m_object;
       }
-      inline QEvent *event() const {
+
+      QEvent *event() const {
          return m_event;
       }
 
@@ -100,11 +106,6 @@ class Q_CORE_EXPORT QStateMachine : public QState
       HighPriority
    };
 
-   enum RestorePolicy {
-      DontRestoreProperties,
-      RestoreProperties
-   };
-
    enum Error {
       NoError,
       NoInitialStateError,
@@ -112,9 +113,9 @@ class Q_CORE_EXPORT QStateMachine : public QState
       NoCommonAncestorForTransitionError
    };
 
-   CORE_CS_ENUM(RestorePolicy)
+   explicit QStateMachine(QObject *parent = nullptr);
+   explicit QStateMachine(QState::ChildMode childMode, QObject *parent = nullptr);
 
-   QStateMachine(QObject *parent = nullptr);
    ~QStateMachine();
 
    void addState(QAbstractState *state);
@@ -135,8 +136,8 @@ class Q_CORE_EXPORT QStateMachine : public QState
    void removeDefaultAnimation(QAbstractAnimation *animation);
 #endif
 
-   QStateMachine::RestorePolicy globalRestorePolicy() const;
-   void setGlobalRestorePolicy(QStateMachine::RestorePolicy restorePolicy);
+   QState::RestorePolicy globalRestorePolicy() const;
+   void setGlobalRestorePolicy(QState::RestorePolicy restorePolicy);
 
    void postEvent(QEvent *event, EventPriority priority = NormalPriority);
    int postDelayedEvent(QEvent *event, int delay);
@@ -148,17 +149,23 @@ class Q_CORE_EXPORT QStateMachine : public QState
    bool eventFilter(QObject *watched, QEvent *event) override;
 #endif
 
+   CORE_CS_SIGNAL_1(Public, void started())
+   CORE_CS_SIGNAL_2(started)
+
+   CORE_CS_SIGNAL_1(Public, void stopped())
+   CORE_CS_SIGNAL_2(stopped)
+
+   CORE_CS_SIGNAL_1(Public, void runningChanged(bool running))
+   CORE_CS_SIGNAL_2(runningChanged, running)
+
    CORE_CS_SLOT_1(Public, void start())
    CORE_CS_SLOT_2(start)
 
    CORE_CS_SLOT_1(Public, void stop())
    CORE_CS_SLOT_2(stop)
 
-   CORE_CS_SIGNAL_1(Public, void started())
-   CORE_CS_SIGNAL_2(started)
-
-   CORE_CS_SIGNAL_1(Public, void stopped())
-   CORE_CS_SIGNAL_2(stopped)
+   CORE_CS_SLOT_1(Public, void setRunning(bool running))
+   CORE_CS_SLOT_2(setRunning)
 
  protected:
    void onEntry(QEvent *event) override;
@@ -189,10 +196,13 @@ class Q_CORE_EXPORT QStateMachine : public QState
    CORE_CS_SLOT_2(_q_animationFinished)
 #endif
 
+   CORE_CS_SLOT_1(Private, void _q_startDelayedEventTimer(int, int))
+   CORE_CS_SLOT_2(_q_startDelayedEventTimer)
+
+   CORE_CS_SLOT_1(Private, void _q_killDelayedEventTimer(int, int))
+   CORE_CS_SLOT_2(_q_killDelayedEventTimer)
 };
 
 #endif //QT_NO_STATEMACHINE
-
-QT_END_NAMESPACE
 
 #endif

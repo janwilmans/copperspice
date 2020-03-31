@@ -35,13 +35,9 @@ QT_BEGIN_NAMESPACE
 
 using namespace QPatternist;
 
-Path::Path(const Expression::Ptr &operand1,
-           const Expression::Ptr &operand2,
-           const Kind kind) : PairContainer(operand1, operand2)
-   , m_hasCreatedSorter(kind != RegularPath)
-   , m_isLast(false)
-   , m_checkXPTY0018(kind == RegularPath)
-   , m_kind(kind)
+Path::Path(const Expression::Ptr &operand1, const Expression::Ptr &operand2, const Kind kind)
+   : PairContainer(operand1, operand2), m_hasCreatedSorter(kind != RegularPath),
+     m_isLast(false), m_checkXPTY0018(kind == RegularPath), m_kind(kind)
 {
 }
 
@@ -52,7 +48,8 @@ Item::Iterator::Ptr Path::mapToSequence(const Item &item,
     * we don't use it, since the context item is accessed through
     * DynamicContext::focusIterator() and friends. */
    Q_ASSERT(item);
-   Q_UNUSED(item); /* Needed when compiling in release mode. */
+   (void) item;
+
    return m_operand2->evaluateSequence(context);
 }
 

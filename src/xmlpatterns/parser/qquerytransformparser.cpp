@@ -840,11 +840,11 @@ static Expression::Ptr pushVariable(const QXmlName name,
 
    switch (type) {
       case VariableDeclaration::FunctionArgument:
-      /* Fallthrough. */
       case VariableDeclaration::ExpressionVariable: {
          slot = parseInfo->allocateExpressionSlot();
          break;
       }
+
       case VariableDeclaration::GlobalVariable: {
          slot = parseInfo->allocateGlobalVariableSlot();
          break;
@@ -1296,13 +1296,6 @@ typedef short int yytype_int16;
 # ifndef YY_
 #  define YY_(msgid) msgid
 # endif
-#endif
-
-/* Suppress unused-variable warnings by "using" E.  */
-#if ! defined lint || defined __GNUC__
-# define YYUSE(e) ((void) (e))
-#else
-# define YYUSE(e) /* empty */
 #endif
 
 /* Identity function, used to suppress warnings about constant conditions.  */
@@ -2863,18 +2856,23 @@ YYSTYPE const *const yyvaluep;
 YYLTYPE const *const yylocationp;
 ParserContext *const parseInfo;
 #endif
+
 {
    if (!yyvaluep) {
       return;
    }
-   YYUSE (yylocationp);
-   YYUSE (parseInfo);
+
+   (void) yylocationp;
+   (void) parseInfo;
+
 # ifdef YYPRINT
    if (yytype < YYNTOKENS) {
       YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
    }
+
 # else
-   YYUSE (yyoutput);
+   (void) yyoutput;
+
 # endif
    switch (yytype) {
       default:
@@ -3234,9 +3232,9 @@ YYLTYPE *yylocationp;
 ParserContext *const parseInfo;
 #endif
 {
-   YYUSE (yyvaluep);
-   YYUSE (yylocationp);
-   YYUSE (parseInfo);
+   (void) yyvaluep;
+   (void) yylocationp;
+   (void) parseInfo;
 
    if (!yymsg) {
       yymsg = "Deleting";

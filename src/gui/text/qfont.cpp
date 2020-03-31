@@ -1107,7 +1107,6 @@ QString QFont::substitute(const QString &familyName)
 
 QStringList QFont::substitutes(const QString &familyName)
 {
-
    QFontSubst *fontSubst = globalFontSubst();
    Q_ASSERT(fontSubst != 0);
 
@@ -1116,8 +1115,6 @@ QStringList QFont::substitutes(const QString &familyName)
 
 void QFont::insertSubstitution(const QString &familyName, const QString &substituteName)
 {
-
-
    QFontSubst *fontSubst = globalFontSubst();
    Q_ASSERT(fontSubst != 0);
 
@@ -1155,8 +1152,6 @@ void QFont::removeSubstitutions(const QString &familyName)
 
 QStringList QFont::substitutions()
 {
-
-
    QFontSubst *fontSubst = globalFontSubst();
    Q_ASSERT(fontSubst != 0);
 
@@ -1167,25 +1162,29 @@ QStringList QFont::substitutions()
    return ret;
 }
 
-
-
 static quint8 get_font_bits(int version, const QFontPrivate *f)
 {
+   (void) version;
+
    Q_ASSERT(f != 0);
 
    quint8 bits = 0;
    if (f->request.style) {
       bits |= 0x01;
    }
+
    if (f->underline) {
       bits |= 0x02;
    }
+
    if (f->overline) {
       bits |= 0x40;
    }
+
    if (f->strikeOut) {
       bits |= 0x04;
    }
+
    if (f->request.fixedPitch) {
       bits |= 0x08;
    }
@@ -1222,7 +1221,10 @@ static quint8 get_extended_font_bits(const QFontPrivate *f)
 
 static void set_font_bits(int version, quint8 bits, QFontPrivate *f)
 {
+   (void) version;
+
    Q_ASSERT(f != 0);
+
    f->request.style         = (bits & 0x01) != 0 ? QFont::StyleItalic : QFont::StyleNormal;
    f->underline             = (bits & 0x02) != 0;
    f->overline              = (bits & 0x40) != 0;

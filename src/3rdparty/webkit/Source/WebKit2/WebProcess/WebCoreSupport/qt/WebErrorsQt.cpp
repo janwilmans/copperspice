@@ -30,8 +30,8 @@
 #include <WebCore/ResourceRequest.h>
 #include <WebCore/ResourceResponse.h>
 
-#include <QCoreApplication>
-#include <QNetworkReply>
+#include <qcoreapplication.h>
+#include <qnetwork_reply.h>
 
 using namespace WebCore;
 
@@ -54,7 +54,7 @@ ResourceError cancelledError(const ResourceRequest& request)
     ResourceError error = ResourceError("QtNetwork", QNetworkReply::OperationCanceledError, request.url().prettyURL(),
                                         QCoreApplication::translate("QWebFrame", "Request cancelled", 0, QCoreApplication::UnicodeUTF8));
     error.setIsCancellation(true);
-    return error;    
+    return error;
 }
 
 ResourceError blockedError(const ResourceRequest& request)

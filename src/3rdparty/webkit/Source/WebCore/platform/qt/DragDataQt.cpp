@@ -95,8 +95,10 @@ String DragData::asPlainText(Frame* frame) const
 
 Color DragData::asColor() const
 {
-    if (!m_platformDragData)
+    if (! m_platformDragData) {
         return Color();
+    }
+
     return qvariant_cast<QColor>(m_platformDragData->colorData());
 }
 
@@ -109,17 +111,21 @@ bool DragData::containsCompatibleContent() const
 
 bool DragData::containsURL(Frame*, FilenameConversionPolicy filenamePolicy) const
 {
-    // FIXME: Use filenamePolicy.
-    if (!m_platformDragData)
+    (void) filenamePolicy;
+
+    if (! m_platformDragData)
         return false;
+
     return m_platformDragData->hasUrls();
 }
 
 String DragData::asURL(Frame*, FilenameConversionPolicy filenamePolicy, String*) const
 {
-    // FIXME: Use filenamePolicy.
+    (void) filenamePolicy;
+
     if (!m_platformDragData)
         return String();
+
     QList<QUrl> urls = m_platformDragData->urls();
 
     if (urls.isEmpty())

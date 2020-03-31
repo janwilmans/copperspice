@@ -21,38 +21,35 @@
 *
 ***********************************************************************/
 
-#include "qdocumentprojector_p.h"
-
-QT_BEGIN_NAMESPACE
+#include <qdocumentprojector_p.h>
 
 using namespace QPatternist;
 
 DocumentProjector::DocumentProjector(const ProjectedExpression::Vector &paths,
-                                     QAbstractXmlReceiver *const receiver) : m_paths(paths)
-   , m_pathCount(paths.count())
-   , m_action(ProjectedExpression::Move)
-   , m_nodesInProcess(0)
-   , m_receiver(receiver)
+                  QAbstractXmlReceiver *const receiver)
+   : m_paths(paths), m_pathCount(paths.count()), m_action(ProjectedExpression::Move),
+     m_nodesInProcess(0), m_receiver(receiver)
 {
    Q_ASSERT_X(paths.count() > 0, Q_FUNC_INFO,
-              "Using DocumentProjector with no paths is an "
-              "overhead and has also undefined behavior.");
+              "Using DocumentProjector with no paths is an overhead and has also undefined behavior.");
    Q_ASSERT(m_receiver);
 }
 
 void DocumentProjector::startElement(const QXmlName name)
 {
-   Q_UNUSED(name);
+   (void) name;
 
    switch (m_action) {
       case ProjectedExpression::KeepSubtree: {
          m_receiver->startElement(name);
-         /* Fallthrough. */
       }
+      [[fallthrough]];
+
       case ProjectedExpression::Skip: {
          ++m_nodesInProcess;
          return;
       }
+
       default: {
          Q_ASSERT_X(m_action == ProjectedExpression::Move, Q_FUNC_INFO,
                     "We're not supposed to receive Keep here, because "
@@ -78,6 +75,7 @@ void DocumentProjector::startElement(const QXmlName name)
                    * some other path might, so continue looping. */
                   continue;
                }
+
                case ProjectedExpression::Move:
                   Q_ASSERT_X(false, Q_FUNC_INFO, "Move is not valid.");
             }
@@ -105,6 +103,7 @@ void DocumentProjector::endElement()
        * all its children. */
       m_action = ProjectedExpression::Skip;
       m_nodesInProcess = 0;
+
    } else if (m_action == ProjectedExpression::KeepSubtree) {
       m_receiver->endElement();
       --m_nodesInProcess;
@@ -114,6 +113,7 @@ void DocumentProjector::endElement()
           * a new path analysis. */
          m_action = ProjectedExpression::Move;
       }
+
    } else {
       Q_ASSERT_X(m_action == ProjectedExpression::Skip, Q_FUNC_INFO,
                  "We're not supposed to be in a Move action here.");
@@ -144,8 +144,8 @@ void DocumentProjector::namespaceBinding(const QXmlName nb)
 
 void DocumentProjector::comment(const QString &value)
 {
-   Q_ASSERT_X(!value.contains(QLatin1String("--")), Q_FUNC_INFO,
-              "Invalid input; it's the caller's responsibility to ensure the input is correct.");
+   Q_ASSERT_X(! value.contains(QString("--")), Q_FUNC_INFO,
+              "Invalid input, caller is responsible to supply valid input.");
    Q_UNUSED(value);
 }
 
@@ -157,8 +157,9 @@ void DocumentProjector::characters(const QString &value)
 void DocumentProjector::processingInstruction(const QXmlName name,
       const QString &value)
 {
-   Q_ASSERT_X(!value.contains(QLatin1String("?>")), Q_FUNC_INFO,
-              "Invalid input; it's the caller's responsibility to ensure the input is correct.");
+   Q_ASSERT_X(! value.contains(QLatin1String("?>")), Q_FUNC_INFO,
+              "Invalid input, caller is responsible to supply valid input.");
+
    Q_UNUSED(name);
    Q_UNUSED(value);
 }
@@ -176,4 +177,3 @@ void DocumentProjector::endDocument()
 {
 }
 
-QT_END_NAMESPACE

@@ -80,7 +80,7 @@ static inline QString jobHoldToString(const QCUPSSupport::JobHoldUntil jobHold, 
          return QString("weekend");
 
       case QCUPSSupport::SpecificTime:
-         if (!holdUntilTime.isNull()) {
+         if (! holdUntilTime.isNull()) {
             // CUPS expects the time in UTC, user has entered in local time, so get the UTS equivalent
             QDateTime localDateTime = QDateTime::currentDateTime();
 
@@ -92,13 +92,13 @@ static inline QString jobHoldToString(const QCUPSSupport::JobHoldUntil jobHold, 
             localDateTime.setTime(holdUntilTime);
             return localDateTime.toUTC().time().toString("HH:mm");
          }
+         [[fallthrough]];
 
-      // else fall through:
       case QCUPSSupport::NoHold:
          return QString();
    }
 
-   // error, may wan to throw
+   // error, may want to throw
 
    return QString();
 }

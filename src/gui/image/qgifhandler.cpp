@@ -1183,14 +1183,15 @@ bool QGifHandler::read(QImage *image)
 
 bool QGifHandler::write(const QImage &image)
 {
-   Q_UNUSED(image);
+   (void) image;
    return false;
 }
 
 bool QGifHandler::supportsOption(ImageOption option) const
 {
-   if (!device() || device()->isSequential()) {
+   if (! device() || device()->isSequential()) {
       return option == Animation;
+
    } else
       return option == Size
          || option == Animation;
@@ -1221,8 +1222,8 @@ QVariant QGifHandler::option(ImageOption option) const
 
 void QGifHandler::setOption(ImageOption option, const QVariant &value)
 {
-   Q_UNUSED(option);
-   Q_UNUSED(value);
+   (void) option;
+   (void) value;
 }
 
 int QGifHandler::nextImageDelay() const

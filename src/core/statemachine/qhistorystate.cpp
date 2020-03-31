@@ -27,12 +27,16 @@
 
 #include <qhistorystate_p.h>
 
-QT_BEGIN_NAMESPACE
-
 QHistoryStatePrivate::QHistoryStatePrivate()
-   : QAbstractStatePrivate(HistoryState),
-     defaultState(0), historyType(QHistoryState::ShallowHistory)
+   : QAbstractStatePrivate(HistoryState), defaultTransition(0), historyType(QHistoryState::ShallowHistory)
 {
+}
+
+DefaultStateTransition::DefaultStateTransition(QHistoryState *source, QAbstractState *target)
+   : QAbstractTransition()
+{
+   setParent(source);
+   setTargetState(target);
 }
 
 QHistoryStatePrivate *QHistoryStatePrivate::get(QHistoryState *q)
@@ -40,17 +44,11 @@ QHistoryStatePrivate *QHistoryStatePrivate::get(QHistoryState *q)
    return q->d_func();
 }
 
-/*!
-  Constructs a new shallow history state with the given \a parent state.
-*/
 QHistoryState::QHistoryState(QState *parent)
    : QAbstractState(*new QHistoryStatePrivate, parent)
 {
 }
-/*!
-  Constructs a new history state of the given \a type, with the given \a
-  parent state.
-*/
+
 QHistoryState::QHistoryState(HistoryType type, QState *parent)
    : QAbstractState(*new QHistoryStatePrivate, parent)
 {
@@ -58,83 +56,88 @@ QHistoryState::QHistoryState(HistoryType type, QState *parent)
    d->historyType = type;
 }
 
-/*!
-  Destroys this history state.
-*/
 QHistoryState::~QHistoryState()
 {
 }
 
-/*!
-  Returns this history state's default state.  The default state indicates the
-  state to transition to if the parent state has never been entered before.
-*/
+QAbstractTransition *QHistoryState::defaultTransition() const
+{
+   Q_D(const QHistoryState);
+   return d->defaultTransition;
+}
+
+void QHistoryState::setDefaultTransition(QAbstractTransition *transition)
+{
+   Q_D(QHistoryState);
+
+   if (d->defaultTransition != transition) {
+      d->defaultTransition = transition;
+      transition->setParent(this);
+      emit defaultTransitionChanged();
+   }
+}
+
 QAbstractState *QHistoryState::defaultState() const
 {
    Q_D(const QHistoryState);
-   return d->defaultState;
+   return d->defaultTransition ? d->defaultTransition->targetState() : nullptr;
 }
 
-/*!
-  Sets this history state's default state to be the given \a state.
-  \a state must be a sibling of this history state.
-
-  Note that this function does not set \a state as the initial state
-  of its parent.
-*/
 void QHistoryState::setDefaultState(QAbstractState *state)
 {
    Q_D(QHistoryState);
+
    if (state && state->parentState() != parentState()) {
-      qWarning("QHistoryState::setDefaultState: state %p does not belong "
-               "to this history state's group (%p)", state, parentState());
+      qWarning("QHistoryState::setDefaultState: State %p does not belong "
+         "to this history state's group (%p)", state, parentState());
       return;
    }
-   d->defaultState = state;
+
+   if (! d->defaultTransition || d->defaultTransition->targetStates().size() != 1
+      || d->defaultTransition->targetStates().first() != state) {
+
+      if (! d->defaultTransition || ! dynamic_cast<DefaultStateTransition *>(d->defaultTransition)) {
+         d->defaultTransition = new DefaultStateTransition(this, state);
+         emit defaultTransitionChanged();
+
+      } else {
+         d->defaultTransition->setTargetState(state);
+      }
+
+      emit defaultStateChanged();
+   }
 }
 
-/*!
-  Returns the type of history that this history state records.
-*/
 QHistoryState::HistoryType QHistoryState::historyType() const
 {
    Q_D(const QHistoryState);
    return d->historyType;
 }
 
-/*!
-  Sets the \a type of history that this history state records.
-*/
 void QHistoryState::setHistoryType(HistoryType type)
 {
    Q_D(QHistoryState);
-   d->historyType = type;
+
+   if (d->historyType != type) {
+      d->historyType = type;
+      emit historyTypeChanged();
+   }
 }
 
-/*!
-  \reimp
-*/
 void QHistoryState::onEntry(QEvent *event)
 {
-   Q_UNUSED(event);
+   (void) event;
 }
 
-/*!
-  \reimp
-*/
+
 void QHistoryState::onExit(QEvent *event)
 {
-   Q_UNUSED(event);
+   (void) event;
 }
 
-/*!
-  \reimp
-*/
 bool QHistoryState::event(QEvent *e)
 {
    return QAbstractState::event(e);
 }
-
-QT_END_NAMESPACE
 
 #endif //QT_NO_STATEMACHINE

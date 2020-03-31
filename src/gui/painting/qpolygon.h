@@ -24,9 +24,9 @@
 #ifndef QPOLYGON_H
 #define QPOLYGON_H
 
-#include <QtCore/qvector.h>
-#include <QtCore/qpoint.h>
-#include <QtCore/qrect.h>
+#include <qvector.h>
+#include <qpoint.h>
+#include <qrect.h>
 
 class QMatrix;
 class QTransform;
@@ -37,29 +37,41 @@ class QRectF;
 class Q_GUI_EXPORT QPolygon : public QVector<QPoint>
 {
  public:
-   inline QPolygon() {}
+   QPolygon()
+   { }
+
    inline explicit QPolygon(int size);
 
-   QPolygon(const QPolygon &other) : QVector<QPoint>(other)
-   {}
-
-   QPolygon(const QVector<QPoint> &v) : QVector<QPoint>(v)
+   QPolygon(const QPolygon &other)
+      : QVector<QPoint>(other)
    { }
 
-   QPolygon(QVector<QPoint> &&v)  : QVector<QPoint>(std::move(v))
+   QPolygon(QPolygon &&other)
+      : QVector<QPoint>(std::move(other))
    { }
 
-   QPolygon(const QRect &rect, bool closed = false);
+   QPolygon(const QVector<QPoint> &points)
+      : QVector<QPoint>(points)
+   { }
+
+   QPolygon(QVector<QPoint> &&points)
+      : QVector<QPoint>(std::move(points))
+   { }
+
+   QPolygon(const QRect &rectangle, bool closed = false);
    QPolygon(int nPoints, const int *points);
 
-   inline ~QPolygon() {}
+   ~QPolygon()
+   { }
 
    void swap(QPolygon &other) {
       QVector<QPoint>::swap(other);
    }
 
-   QPolygon(QPolygon &&other) : QVector<QPoint>(std::move(other))
-   { }
+   QPolygon &operator=(const QPolygon &other) {
+      QVector<QPoint>::operator=(other);
+      return *this;
+   }
 
    QPolygon &operator=(QPolygon &&other)  {
       swap(other);
@@ -78,7 +90,7 @@ class Q_GUI_EXPORT QPolygon : public QVector<QPoint>
 
    void point(int i, int *x, int *y) const;
 
-   inline QPoint point(int i) const;
+   inline QPoint point(int index) const;
    inline void setPoint(int index, int x, int y);
    inline void setPoint(int index, const QPoint &p);
 
@@ -90,9 +102,9 @@ class Q_GUI_EXPORT QPolygon : public QVector<QPoint>
 
    bool containsPoint(const QPoint &pt, Qt::FillRule fillRule) const;
 
-   QPolygon united(const QPolygon &r) const;
-   QPolygon intersected(const QPolygon &r) const;
-   QPolygon subtracted(const QPolygon &r) const;
+   QPolygon united(const QPolygon &rectangle) const;
+   QPolygon intersected(const QPolygon &rectangle) const;
+   QPolygon subtracted(const QPolygon &rectangle) const;
 };
 
 inline QPolygon::QPolygon(int asize) : QVector<QPoint>(asize) {}
@@ -135,23 +147,31 @@ class Q_GUI_EXPORT QPolygonF : public QVector<QPointF>
 
    inline explicit QPolygonF(int size);
 
-   QPolygonF(const QPolygonF &other) : QVector<QPointF>(other)
+   QPolygonF(const QPolygonF &other)
+      : QVector<QPointF>(other)
    { }
 
-   QPolygonF(const QVector<QPointF> &v) : QVector<QPointF>(v)
+   QPolygonF(QPolygonF &&other)
+      : QVector<QPointF>(std::move(other))
    { }
 
-   QPolygonF(QPolygonF &&other) : QVector<QPointF>(std::move(other))
+   QPolygonF(const QVector<QPointF> &points)
+      : QVector<QPointF>(points)
    { }
 
-   QPolygonF(QVector<QPointF> &&v) : QVector<QPointF>(std::move(v))
+   QPolygonF(QVector<QPointF> &&points)
+      : QVector<QPointF>(std::move(points))
    { }
 
+   QPolygonF(const QRectF &rectangle);
+   QPolygonF(const QPolygon &polygon);      // not in QPolygon
 
-   QPolygonF(const QRectF &r);
-   QPolygonF(const QPolygon &a);
+   ~QPolygonF()
+   { }
 
-   ~QPolygonF() {}
+   void swap(QPolygonF &other) {
+      QVector<QPointF>::swap(other);
+   }
 
    QPolygonF &operator=(const QPolygonF &other) {
       QVector<QPointF>::operator=(other);
@@ -161,10 +181,6 @@ class Q_GUI_EXPORT QPolygonF : public QVector<QPointF>
    QPolygonF &operator=(QPolygonF &&other) {
       swap(other);
       return *this;
-   }
-
-   void swap(QPolygonF &other) {
-      QVector<QPointF>::swap(other);
    }
 
    operator QVariant() const;
@@ -185,9 +201,9 @@ class Q_GUI_EXPORT QPolygonF : public QVector<QPointF>
 
    bool containsPoint(const QPointF &pt, Qt::FillRule fillRule) const;
 
-   QPolygonF united(const QPolygonF &r) const;
-   QPolygonF intersected(const QPolygonF &r) const;
-   QPolygonF subtracted(const QPolygonF &r) const;
+   QPolygonF united(const QPolygonF &rectangle) const;
+   QPolygonF intersected(const QPolygonF &rectangle) const;
+   QPolygonF subtracted(const QPolygonF &rectangle) const;
 };
 
 inline QPolygonF::QPolygonF(int asize) : QVector<QPointF>(asize) {}
@@ -208,8 +224,5 @@ inline QPolygonF QPolygonF::translated(qreal dx, qreal dy) const
 {
    return translated(QPointF(dx, dy));
 }
-
-
-
 
 #endif

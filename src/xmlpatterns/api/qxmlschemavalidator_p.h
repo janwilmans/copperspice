@@ -31,9 +31,7 @@
 #include "qxmlschema_p.h"
 #include "qxsdschemacontext_p.h"
 #include "qxsdschema_p.h"
-#include <QtNetwork/QNetworkAccessManager>
-
-QT_BEGIN_NAMESPACE
+#include <qaccess_manager.h>
 
 class QXmlSchemaValidatorPrivate
 {
@@ -90,7 +88,5 @@ class QXmlSchemaValidatorPrivate
    QPatternist::XsdSchema::Ptr                                      m_schema;
    QUrl                                                             m_schemaDocumentUri;
 };
-
-QT_END_NAMESPACE
 
 #endif

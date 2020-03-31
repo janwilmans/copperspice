@@ -21,9 +21,9 @@
 *
 ***********************************************************************/
 
-#include <QStack>
-
+#include <qstack.h>
 #include "qabstractxmlreceiver.h"
+
 #include "qabstractxmlnodemodel_p.h"
 #include "qacceliterators_p.h"
 #include "qacceltree_p.h"
@@ -151,12 +151,10 @@ QUrl AccelTree::baseUri(const QXmlNodeModelIndex &ni) const
             return par.baseUri();
          }
       }
+
       case QXmlNodeModelIndex::ProcessingInstruction:
-      /* Fallthrough. */
       case QXmlNodeModelIndex::Comment:
-      /* Fallthrough. */
       case QXmlNodeModelIndex::Attribute:
-      /* Fallthrough. */
       case QXmlNodeModelIndex::Text: {
          const QXmlNodeModelIndex par(ni.iterate(QXmlNodeModelIndex::AxisParent)->next());
          if (par.isNull()) {
@@ -229,27 +227,24 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
 
    switch (axis) {
       case QXmlNodeModelIndex::AxisChildOrTop: {
-         if (!hasParent(preNumber)) {
+         if (! hasParent(preNumber)) {
             switch (kind(preNumber)) {
                case QXmlNodeModelIndex::Comment:
-               /* Fallthrough. */
                case QXmlNodeModelIndex::ProcessingInstruction:
-               /* Fallthrough. */
                case QXmlNodeModelIndex::Element:
-               /* Fallthrough. */
                case QXmlNodeModelIndex::Text:
                   return makeSingletonIterator(ni);
+
                case QXmlNodeModelIndex::Attribute:
-               /* Fallthrough. */
                case QXmlNodeModelIndex::Document:
-               /* Fallthrough. */
                case QXmlNodeModelIndex::Namespace:
-                  /* Do nothing. */
+                  // do nothing
                   ;
             }
          }
-         /* Else, fallthrough to AxisChild. */
       }
+      [[fallthrough]];
+
       case QXmlNodeModelIndex::AxisChild: {
          if (hasChildren(preNumber)) {
             return QXmlNodeModelIndex::Iterator::Ptr(new ChildIterator(this, preNumber));
@@ -257,6 +252,7 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return makeEmptyIterator<QXmlNodeModelIndex>();
          }
       }
+
       case QXmlNodeModelIndex::AxisAncestor: {
          if (hasParent(preNumber)) {
             return QXmlNodeModelIndex::Iterator::Ptr(new AncestorIterator<false>(this, preNumber));
@@ -264,8 +260,10 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return makeEmptyIterator<QXmlNodeModelIndex>();
          }
       }
+
       case QXmlNodeModelIndex::AxisAncestorOrSelf:
          return QXmlNodeModelIndex::Iterator::Ptr(new AncestorIterator<true>(this, preNumber));
+
       case QXmlNodeModelIndex::AxisParent: {
          if (hasParent(preNumber)) {
             return makeSingletonIterator(createIndex(parent(preNumber)));
@@ -273,6 +271,7 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return makeEmptyIterator<QXmlNodeModelIndex>();
          }
       }
+
       case QXmlNodeModelIndex::AxisDescendant: {
          if (hasChildren(preNumber)) {
             return QXmlNodeModelIndex::Iterator::Ptr(new DescendantIterator<false>(this, preNumber));
@@ -280,8 +279,10 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return makeEmptyIterator<QXmlNodeModelIndex>();
          }
       }
+
       case QXmlNodeModelIndex::AxisDescendantOrSelf:
          return QXmlNodeModelIndex::Iterator::Ptr(new DescendantIterator<true>(this, preNumber));
+
       case QXmlNodeModelIndex::AxisFollowing: {
          if (preNumber == maximumPreNumber()) {
             return makeEmptyIterator<QXmlNodeModelIndex>();
@@ -289,12 +290,14 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return QXmlNodeModelIndex::Iterator::Ptr(new FollowingIterator(this, preNumber));
          }
       }
+
       case QXmlNodeModelIndex::AxisAttributeOrTop: {
          if (!hasParent(preNumber) && kind(preNumber) == QXmlNodeModelIndex::Attribute) {
             return makeSingletonIterator(ni);
          }
-         /* Else, falthrough to AxisAttribute. */
       }
+      [[fallthrough]];
+
       case QXmlNodeModelIndex::AxisAttribute: {
          if (hasChildren(preNumber) && kind(preNumber + 1) == QXmlNodeModelIndex::Attribute) {
             return QXmlNodeModelIndex::Iterator::Ptr(new AttributeIterator(this, preNumber));
@@ -309,8 +312,10 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return QXmlNodeModelIndex::Iterator::Ptr(new PrecedingIterator(this, preNumber));
          }
       }
+
       case QXmlNodeModelIndex::AxisSelf:
          return makeSingletonIterator(createIndex(toPreNumber(ni)));
+
       case QXmlNodeModelIndex::AxisFollowingSibling: {
          if (preNumber == maximumPreNumber()) {
             return makeEmptyIterator<QXmlNodeModelIndex>();
@@ -318,6 +323,7 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return QXmlNodeModelIndex::Iterator::Ptr(new SiblingIterator<true>(this, preNumber));
          }
       }
+
       case QXmlNodeModelIndex::AxisPrecedingSibling: {
          if (preNumber == 0) {
             return makeEmptyIterator<QXmlNodeModelIndex>();
@@ -325,6 +331,7 @@ QXmlNodeModelIndex::Iterator::Ptr AccelTree::iterate(const QXmlNodeModelIndex &n
             return QXmlNodeModelIndex::Iterator::Ptr(new SiblingIterator<false>(this, preNumber));
          }
       }
+
       case QXmlNodeModelIndex::AxisNamespace:
          return makeEmptyIterator<QXmlNodeModelIndex>();
    }
@@ -343,7 +350,8 @@ QXmlNodeModelIndex AccelTree::nextFromSimpleAxis(QAbstractXmlNodeModel::SimpleAx
 QVector<QXmlNodeModelIndex> AccelTree::attributes(const QXmlNodeModelIndex &element) const
 {
    Q_ASSERT_X(false, Q_FUNC_INFO, "This function should never be called.");
-   Q_UNUSED(element);
+   (void) element;
+
    return QVector<QXmlNodeModelIndex>();
 }
 
@@ -486,18 +494,19 @@ QString AccelTree::stringValue(const QXmlNodeModelIndex &ni) const
 
          return result;
       }
+
       case QXmlNodeModelIndex::Text: {
          if (isCompressed(preNumber)) {
             return CompressedWhitespace::decompress(data.value(preNumber));
          }
-         /* Else, fallthrough. It's not compressed so use it as it is. */
       }
+      [[fallthrough]];
+
       case QXmlNodeModelIndex::Attribute:
-      /* Fallthrough */
       case QXmlNodeModelIndex::ProcessingInstruction:
-      /* Fallthrough */
       case QXmlNodeModelIndex::Comment:
          return data.value(preNumber);
+
       case QXmlNodeModelIndex::Document: {
          /* Concatenate all text nodes in the whole document. */
 

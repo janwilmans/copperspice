@@ -32,8 +32,6 @@
 
 #include <qtokenizer_p.h>
 
-QT_BEGIN_NAMESPACE
-
 namespace QPatternist {
 struct TokenMap;
 
@@ -110,7 +108,7 @@ class XQueryTokenizer : public Tokenizer
     * @returns the character @p length characters from the current
     * position.
     */
-   inline char peekAhead(const int length = 1) const;
+   inline QChar peekAhead(const int length = 1) const;
 
    /**
     * @returns whether the stream, starting from @p offset from the
@@ -127,7 +125,7 @@ class XQueryTokenizer : public Tokenizer
    static inline Token error();
    inline TokenType consumeWhitespace();
 
-   inline char peekCurrent() const;
+   inline QChar peekCurrent() const;
 
    /**
     * Disregarding encoding conversion, equivalent to calling:
@@ -238,11 +236,8 @@ class XQueryTokenizer : public Tokenizer
     *
     * @see commenceScanOnly(), resumeTokenizationFrom()
     */
-   Token attributeAsRaw(const QChar separator,
-                        int &stack,
-                        const int startPos,
-                        const bool inLiteral,
-                        QString &result);
+   Token attributeAsRaw(const QChar separator, int &stack, const int startPos,
+                  const bool inLiteral, QString &result);
 
    const QString           m_data;
    const int               m_length;
@@ -275,6 +270,5 @@ class XQueryTokenizer : public Tokenizer
 };
 }
 
-QT_END_NAMESPACE
 
 #endif

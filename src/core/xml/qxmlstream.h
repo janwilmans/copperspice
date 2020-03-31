@@ -119,7 +119,8 @@ class Q_CORE_EXPORT QXmlStreamAttribute
 class Q_CORE_EXPORT QXmlStreamAttributes : public QVector<QXmlStreamAttribute>
 {
  public:
-   inline QXmlStreamAttributes() {}
+   QXmlStreamAttributes()
+   { }
 
    QStringView value(const QString &namespaceUri, const QString &name) const;
    QStringView value(const QString &qualifiedName) const;
@@ -326,7 +327,7 @@ class Q_CORE_EXPORT QXmlStreamReader
    TokenType tokenType() const;
    QString tokenString() const;
 
-   void setNamespaceProcessing(bool);
+   void setNamespaceProcessing(bool enable);
    bool namespaceProcessing() const;
 
    inline bool isStartDocument() const {

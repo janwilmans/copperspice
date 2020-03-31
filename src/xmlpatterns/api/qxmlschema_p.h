@@ -32,10 +32,8 @@
 #include "qxsdschemaparser_p.h"
 #include "qxsdschemaparsercontext_p.h"
 
-#include <QtCore/QSharedData>
-#include <QtNetwork/QNetworkAccessManager>
-
-QT_BEGIN_NAMESPACE
+#include <qshareddata.h>
+#include <qaccess_manager.h>
 
 class QXmlSchemaPrivate : public QSharedData
 {
@@ -69,7 +67,5 @@ class QXmlSchemaPrivate : public QSharedData
    bool                                                             m_schemaIsValid;
    QUrl                                                             m_documentUri;
 };
-
-QT_END_NAMESPACE
 
 #endif

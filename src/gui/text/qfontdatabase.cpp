@@ -825,9 +825,12 @@ QString qt_resolveFontFamilyAlias(const QString &alias)
    return alias;
 }
 
-QStringList QPlatformFontDatabase::fallbacksForFamily(const QString &family, QFont::Style style, QFont::StyleHint styleHint,
-   QChar::Script script) const
+QStringList QPlatformFontDatabase::fallbacksForFamily(const QString &family, QFont::Style style,
+            QFont::StyleHint styleHint, QChar::Script script) const
 {
+   (void) family;
+   (void) styleHint;
+
    QStringList preferredFallbacks;
    QStringList otherFallbacks;
 
@@ -1108,6 +1111,8 @@ static unsigned int bestFoundry(int script, unsigned int score, int styleStrateg
    QtFontStyle::Key styleKey, int pixelSize, char pitch,
    QtFontDesc *desc, const QString &styleName = QString())
 {
+   (void) script;
+
    desc->foundry = 0;
    desc->style   = 0;
    desc->size    = 0;
@@ -1537,6 +1542,7 @@ QStringList QFontDatabase::styles(const QString &family) const
    }
 
    QtFontFoundry allStyles(foundryName);
+
    for (int j = 0; j < f->count; j++) {
       QtFontFoundry *foundry = f->foundries[j];
 
@@ -1560,6 +1566,8 @@ QStringList QFontDatabase::styles(const QString &family) const
 
 bool QFontDatabase::isFixedPitch(const QString &family, const QString &style) const
 {
+   (void) style;
+
    QString familyName;
    QString foundryName;
 

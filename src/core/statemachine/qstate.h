@@ -24,11 +24,9 @@
 #ifndef QSTATE_H
 #define QSTATE_H
 
-#include <QtCore/qabstractstate.h>
-#include <QtCore/qlist.h>
-#include <QSignalTransition>
-
-QT_BEGIN_NAMESPACE
+#include <qabstractstate.h>
+#include <qlist.h>
+#include <qsignaltransition.h>
 
 #ifndef QT_NO_STATEMACHINE
 
@@ -41,23 +39,31 @@ class Q_CORE_EXPORT QState : public QAbstractState
 
    CORE_CS_PROPERTY_READ(initialState, initialState)
    CORE_CS_PROPERTY_WRITE(initialState, setInitialState)
+   CORE_CS_PROPERTY_NOTIFY(initialState, initialStateChanged)
 
    CORE_CS_PROPERTY_READ(errorState, errorState)
    CORE_CS_PROPERTY_WRITE(errorState, setErrorState)
+   CORE_CS_PROPERTY_NOTIFY(errorState, errorStateChanged)
 
    CORE_CS_PROPERTY_READ(childMode, childMode)
    CORE_CS_PROPERTY_WRITE(childMode, setChildMode)
- 
+   CORE_CS_PROPERTY_NOTIFY(childMode, childModeChanged)
+
  public:
    enum ChildMode {
       ExclusiveStates,
       ParallelStates
    };
-
    CORE_CS_ENUM(ChildMode)
 
-   QState(QState *parent = 0);
-   QState(ChildMode childMode, QState *parent = 0);
+   enum RestorePolicy {
+      DontRestoreProperties,
+      RestoreProperties
+   };
+   CORE_CS_ENUM(RestorePolicy)
+
+   QState(QState *parent = nullptr);
+   QState(ChildMode childMode, QState *parent = nullptr);
    ~QState();
 
    void addTransition(QAbstractTransition *transition);
@@ -79,9 +85,7 @@ class Q_CORE_EXPORT QState : public QAbstractState
    QAbstractState *errorState() const;
    void setErrorState(QAbstractState *state);
 
-#ifndef QT_NO_PROPERTIES
    void assignProperty(QObject *object, const char *name, const QVariant &value);
-#endif
 
  public:
    CORE_CS_SIGNAL_1(Public, void finished())
@@ -89,6 +93,15 @@ class Q_CORE_EXPORT QState : public QAbstractState
 
    CORE_CS_SIGNAL_1(Public, void propertiesAssigned())
    CORE_CS_SIGNAL_2(propertiesAssigned)
+
+   CORE_CS_SIGNAL_1(Public, void childModeChanged())
+   CORE_CS_SIGNAL_2(childModeChanged)
+
+   CORE_CS_SIGNAL_1(Public, void initialStateChanged())
+   CORE_CS_SIGNAL_2(initialStateChanged)
+
+   CORE_CS_SIGNAL_1(Public, void errorStateChanged())
+   CORE_CS_SIGNAL_2(errorStateChanged)
 
  protected:
    void onEntry(QEvent *event) override;
@@ -105,19 +118,21 @@ class Q_CORE_EXPORT QState : public QAbstractState
 
 template<class SignalClass, class ...SignalArgs>
 QSignalTransition *QState::addTransition(QObject *sender, void (SignalClass::*signal)(SignalArgs...),
-      QAbstractState *target)
+   QAbstractState *target)
 {
    if (! sender) {
       qWarning("QState::addTransition: No sender specified");
-      return 0;
+      return nullptr;
    }
+
    if (! signal) {
       qWarning("QState::addTransition: No signal specified");
-      return 0;
+      return nullptr;
    }
+
    if (! target) {
       qWarning("QState::addTransition: No target specified");
-      return 0;
+      return nullptr;
    }
 
    QSignalTransition *trans = new QSignalTransition(sender, signal);
@@ -128,7 +143,5 @@ QSignalTransition *QState::addTransition(QObject *sender, void (SignalClass::*si
 }
 
 #endif //QT_NO_STATEMACHINE
-
-QT_END_NAMESPACE
 
 #endif

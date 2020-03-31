@@ -24,11 +24,12 @@
 #ifndef QSIGNALTRANSITION_H
 #define QSIGNALTRANSITION_H
 
-#include <QtCore/qabstracttransition.h>
+#include <qabstracttransition.h>
 
-QT_BEGIN_NAMESPACE
-
+#include <qabstracttransition_p.h>
 #ifndef QT_NO_STATEMACHINE
+
+class QSignalTransitionPrivate;
 
 class Q_CORE_EXPORT QSignalTransition : public QAbstractTransition
 {
@@ -38,22 +39,20 @@ class Q_CORE_EXPORT QSignalTransition : public QAbstractTransition
    CORE_CS_PROPERTY_WRITE(senderObject, setSenderObject)
 
  public:
-   QSignalTransition(QState *sourceState = 0);
+   QSignalTransition(QState *sourceState = nullptr);
 
-   template<class SignalClass, class ...SignalArgs>
-   QSignalTransition(QObject *sender, void (SignalClass::*signal)(SignalArgs...), QState *sourceState = 0);
+   template<class SignalClass, class ...SignalArgs> QSignalTransition(QObject *sender, void (SignalClass::*signal)(SignalArgs...),
+      QState *sourceState = nullptr);
 
    ~QSignalTransition();
 
-   QObject *senderObject() const;
-   void setSenderObject(QObject *sender);
+   const QObject *senderObject() const;
+   void setSenderObject(const QObject *sender);
 
    CsSignal::Internal::BentoAbstract *get_signalBento() const;
 
    void unregister();
    void maybeRegister();
-
-   virtual void callOnTransition(QEvent *e);
 
  protected:
    bool eventTest(QEvent *event) override;
@@ -62,14 +61,15 @@ class Q_CORE_EXPORT QSignalTransition : public QAbstractTransition
 
  private:
    Q_DISABLE_COPY(QSignalTransition)
+   Q_DECLARE_PRIVATE(QSignalTransition)
 
-   QObject *m_sender;
+   const QObject *m_sender;
    QScopedPointer<CsSignal::Internal::BentoAbstract> m_signalBento;
 };
 
 
-template<class SignalClass, class ...SignalArgs>
-QSignalTransition::QSignalTransition(QObject *sender, void (SignalClass::*signal)(SignalArgs...), QState *sourceState)
+template<class SignalClass, class ...SignalArgs> QSignalTransition::QSignalTransition(QObject *sender,
+   void (SignalClass::*signal)(SignalArgs...), QState *sourceState)
    : QAbstractTransition(sourceState)
 {
    m_sender = sender;
@@ -78,8 +78,15 @@ QSignalTransition::QSignalTransition(QObject *sender, void (SignalClass::*signal
    m_signalBento.reset(new CSBento<void (SignalClass::*)(SignalArgs...)> {signal});
 }
 
-#endif //QT_NO_STATEMACHINE
+// minimized class
+class QSignalTransitionPrivate : public QAbstractTransitionPrivate
+{
+   Q_DECLARE_PUBLIC(QSignalTransition)
 
-QT_END_NAMESPACE
+ public:
+   void callOnTransition(QEvent *e) override;
+};
+
+#endif //QT_NO_STATEMACHINE
 
 #endif

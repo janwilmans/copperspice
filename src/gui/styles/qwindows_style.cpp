@@ -302,7 +302,11 @@ int QWindowsStylePrivate::pixelMetricFromSystemDp(QStyle::PixelMetric pm, const 
          break;
    }
 
+#else
+   (void) pm;
+   (void) widget;
 #endif
+
    return QWindowsStylePrivate::InvalidMetric;
 }
 
@@ -1665,6 +1669,7 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
          }
          break;
 #endif // QT_NO_SCROLLBAR
+
       case CE_HeaderSection: {
          QBrush fill;
          if (opt->state & State_On) {
@@ -1680,10 +1685,11 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
          }
          break;
       }
+
 #ifndef QT_NO_TOOLBAR
       case CE_ToolBar:
          if (const QStyleOptionToolBar *toolbar = qstyleoption_cast<const QStyleOptionToolBar *>(opt)) {
-            if (!(widget && qobject_cast<const QMainWindow *> (widget->parentWidget()))) {
+            if (! (widget && qobject_cast<const QMainWindow *> (widget->parentWidget()))) {
                break;
             }
             QRect rect = opt->rect;
@@ -1693,44 +1699,54 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
             bool paintBottomBorder = true;
 
             switch (toolbar->toolBarArea) {
-               case Qt::BottomToolBarArea :
+               case Qt::BottomToolBarArea:
                   switch (toolbar->positionOfLine) {
                      case QStyleOptionToolBar::Beginning:
                      case QStyleOptionToolBar::OnlyOne:
                         paintBottomBorder = false;
+
                      default:
                         break;
                   }
-               case Qt::TopToolBarArea :
+                  [[fallthrough]];
+
+               case Qt::TopToolBarArea:
                   switch (toolbar->positionWithinLine) {
                      case QStyleOptionToolBar::Beginning:
                         paintLeftBorder = false;
                         break;
+
                      case QStyleOptionToolBar::End:
                         paintRightBorder = false;
                         break;
+
                      case QStyleOptionToolBar::OnlyOne:
                         paintRightBorder = false;
                         paintLeftBorder = false;
+
                      default:
                         break;
                   }
+
                   if (opt->direction == Qt::RightToLeft) { //reverse layout changes the order of Beginning/end
                      bool tmp = paintLeftBorder;
                      paintRightBorder = paintLeftBorder;
                      paintLeftBorder = tmp;
                   }
                   break;
+
                case Qt::RightToolBarArea :
                   switch (toolbar->positionOfLine) {
                      case QStyleOptionToolBar::Beginning:
                      case QStyleOptionToolBar::OnlyOne:
                         paintRightBorder = false;
                         break;
+
                      default:
                         break;
                   }
                   break;
+
                case Qt::LeftToolBarArea :
                   switch (toolbar->positionOfLine) {
                      case QStyleOptionToolBar::Beginning:
@@ -1741,12 +1757,12 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
                         break;
                   }
                   break;
+
                default:
                   break;
             }
 
-
-            //draw top border
+            // draw top border
             p->setPen(QPen(opt->palette.light().color()));
             p->drawLine(rect.topLeft().x(),
                rect.topLeft().y(),
@@ -1799,7 +1815,9 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
                m.rotate(90);
                m.translate(0, -(rect.height() + rect.y() * 2));
             }
+
             QPalette pal2 = pb->palette;
+
             // Correct the highlight color if it is the same as the background
             if (pal2.highlight() == pal2.background())
                pal2.setColor(QPalette::Highlight, pb->palette.color(QPalette::Active,

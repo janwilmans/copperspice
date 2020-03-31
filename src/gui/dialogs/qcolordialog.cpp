@@ -656,7 +656,7 @@ void QColorWell::dropEvent(QDropEvent *e)
 
 void QColorWell::mouseReleaseEvent(QMouseEvent *e)
 {
-   if (!mousePressed) {
+   if (! mousePressed) {
       return;
    }
    QWellArray::mouseReleaseEvent(e);
@@ -1131,7 +1131,8 @@ void QColorShowLabel::mousePressEvent(QMouseEvent *e)
 void QColorShowLabel::mouseMoveEvent(QMouseEvent *e)
 {
 #ifdef QT_NO_DRAGANDDROP
-   Q_UNUSED(e);
+   (void) e;
+
 #else
    if (!mousePressed) {
       return;

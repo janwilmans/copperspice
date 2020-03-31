@@ -24,7 +24,7 @@
 #include <qfile.h>
 #include <qtextcodec.h>
 #include <qtimer.h>
-#include <qnetworkrequest.h>
+#include <qnetwork_request.h>
 #include <qxmlstreamreader.h>
 
 #include <qatomicstring_p.h>
@@ -198,12 +198,13 @@ bool AccelTreeResourceLoader::streamToReceiver(QIODevice *const dev, AccelTreeBu
             receiver->endDocument();
             continue;
          }
+
          case QXmlStreamReader::EntityReference:
-         /* Fallthrough. */
          case QXmlStreamReader::DTD: {
             /* We just ignore any DTD and entity references. */
             continue;
          }
+
          case QXmlStreamReader::Invalid: {
             if (context) {
                context->error(escape(reader.errorString()), ReportContext::FODC0002, QSourceLocation(uri, reader.lineNumber(),
@@ -261,7 +262,8 @@ SequenceType::Ptr AccelTreeResourceLoader::announceDocument(const QUrl &uri, con
    // TODO deal with the usage thingy
    Q_ASSERT(uri.isValid());
    Q_ASSERT(!uri.isRelative());
-   Q_UNUSED(uri); /* Needed when compiling in release mode. */
+
+   (void) uri;
 
    return CommonSequenceTypes::ZeroOrOneDocumentNode;
 }
@@ -385,7 +387,8 @@ void AccelTreeResourceLoader::clear(const QUrl &uri)
 
 void QPatternist::NetworkLoop::error(QNetworkReply::NetworkError code)
 {
-   Q_UNUSED(code);
+   (void) code;
+
    m_hasReceivedError = true;
    exit(1);
 }

@@ -24,17 +24,18 @@
 #ifndef QABSTRACTSTATE_P_H
 #define QABSTRACTSTATE_P_H
 
-QT_BEGIN_NAMESPACE
+#include <qabstractstate.h>
 
 class QStateMachine;
-class QAbstractState;
+class QState;
 
 class QAbstractStatePrivate
 {
    Q_DECLARE_PUBLIC(QAbstractState)
 
  public:
-   virtual ~QAbstractStatePrivate() {}
+   virtual ~QAbstractStatePrivate()
+   { }
 
    enum StateType {
       AbstractState,
@@ -56,15 +57,15 @@ class QAbstractStatePrivate
    void emitEntered();
    void emitExited();
 
-   uint stateType: 31;
+   uint stateType: 30;
    uint isMachine: 1;
+   bool active: 1;
+
    mutable QState *parentState;
 
  protected:
    QAbstractState *q_ptr;
 
 };
-
-QT_END_NAMESPACE
 
 #endif

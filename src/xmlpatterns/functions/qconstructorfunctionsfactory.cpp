@@ -21,6 +21,8 @@
 *
 ***********************************************************************/
 
+#include "qconstructorfunctionsfactory_p.h"
+
 #include "qatomictype_p.h"
 #include "qbuiltintypes_p.h"
 #include "qcastas_p.h"
@@ -31,10 +33,6 @@
 #include "qgenericsequencetype_p.h"
 #include "qschematype_p.h"
 #include "qschematypefactory_p.h"
-
-#include "qconstructorfunctionsfactory_p.h"
-
-QT_BEGIN_NAMESPACE
 
 using namespace QPatternist;
 
@@ -76,7 +74,7 @@ ConstructorFunctionsFactory::ConstructorFunctionsFactory(const NamePool::Ptr &np
 Expression::Ptr ConstructorFunctionsFactory::retrieveExpression(const QXmlName name,
                   const Expression::List &args, const FunctionSignature::Ptr &sign) const
 {
-   Q_UNUSED(sign);
+   (void) sign;
 
    /* This function is only called if the callsite is valid, so createSchemaType() will always
     * return an AtomicType. */
@@ -88,8 +86,6 @@ Expression::Ptr ConstructorFunctionsFactory::retrieveExpression(const QXmlName n
 FunctionSignature::Ptr ConstructorFunctionsFactory::retrieveFunctionSignature(const NamePool::Ptr &np,
                   const QXmlName name)
 {
-   Q_UNUSED(np);
+   (void) np;
    return functionSignatures().value(name);
 }
-
-QT_END_NAMESPACE

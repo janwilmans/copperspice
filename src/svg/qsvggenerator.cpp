@@ -805,20 +805,19 @@ bool QSvgPaintEngine::end()
    return true;
 }
 
-void QSvgPaintEngine::drawPixmap(const QRectF &r, const QPixmap &pm,
-                                 const QRectF &sr)
+void QSvgPaintEngine::drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
 {
    drawImage(r, pm.toImage(), sr);
 }
 
 void QSvgPaintEngine::drawImage(const QRectF &r, const QImage &image,
-                                const QRectF &sr,
-                                Qt::ImageConversionFlags flags)
+            const QRectF &sr, Qt::ImageConversionFlags flags)
 {
    //Q_D(QSvgPaintEngine);
 
-   Q_UNUSED(sr);
-   Q_UNUSED(flags);
+   (void) sr;
+   (void) flags;
+
    stream() << "<image ";
    stream() << "x=\"" << r.x() << "\" "
             "y=\"" << r.y() << "\" "

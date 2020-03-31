@@ -21,11 +21,13 @@
 *
 ***********************************************************************/
 
+#include "qexpressionfactory_p.h"
+
 #include <QBuffer>
 #include <QByteArray>
 
-#include "qcalltemplate_p.h"
-#include "qcommonsequencetypes_p.h"
+#include <qcalltemplate_p.h>
+#include <qcommonsequencetypes_p.h>
 #include <qxmlpatterns_debug_p.h>
 #include "qexpression_p.h"
 #include "qgenericstaticcontext_p.h"
@@ -38,10 +40,6 @@
 #include "qtokenrevealer_p.h"
 #include "qxquerytokenizer_p.h"
 #include "qxslttokenizer_p.h"
-
-#include "qexpressionfactory_p.h"
-
-QT_BEGIN_NAMESPACE
 
 namespace QPatternist {
 
@@ -117,6 +115,7 @@ Expression::Ptr ExpressionFactory::createExpression(const Tokenizer::Ptr &tokeni
    Q_ASSERT(queryURI.isValid());
 
    Tokenizer::Ptr effectiveTokenizer(tokenizer);
+
 #ifdef Patternist_DEBUG
    effectiveTokenizer = Tokenizer::Ptr(new TokenRevealer(queryURI, tokenizer));
 #endif
@@ -130,19 +129,15 @@ Expression::Ptr ExpressionFactory::createExpression(const Tokenizer::Ptr &tokeni
 
    const int bisonRetval = XPathparse(info.data());
 
-   Q_ASSERT_X(bisonRetval == 0, Q_FUNC_INFO,
-              "We shouldn't be able to get an error, because we throw exceptions.");
-   Q_UNUSED(bisonRetval); /* Needed when not compiled in debug mode, since bisonRetval won't
-                            * be used in the Q_ASSERT_X above. */
+   Q_ASSERT_X(bisonRetval == 0, Q_FUNC_INFO, "Internal error in XML Parsing");
+   (void) bisonRetval;
 
    Expression::Ptr result(info->queryBody);
 
-   if (!result) {
+   if (! result) {
       context->error(QtXmlPatterns::tr("A library module cannot be evaluated "
-                                       "directly. It must be imported from a "
-                                       "main module."),
-                     ReportContext::XPST0003,
-                     QSourceLocation(queryURI, 1, 1));
+                  "directly. It must be imported from a main module."),
+                  ReportContext::XPST0003, QSourceLocation(queryURI, 1, 1));
    }
 
    /* Optimization: I think many things are done in the wrong order below. We
@@ -408,32 +403,27 @@ void ExpressionFactory::registerLastPath(const Expression::Ptr &operand)
    }
 }
 
-void ExpressionFactory::processTreePass(const Expression::Ptr &,
-                                        const CompilationStage)
+void ExpressionFactory::processTreePass(const Expression::Ptr &, const CompilationStage)
 {
 }
 
 void ExpressionFactory::processTemplateRule(const Expression::Ptr &body,
-      const TemplatePattern::Ptr &pattern,
-      const QXmlName &mode,
+      const TemplatePattern::Ptr &pattern, const QXmlName &mode,
       const TemplateCompilationStage stage)
 {
-   Q_UNUSED(body);
-   Q_UNUSED(pattern);
-   Q_UNUSED(mode);
-   Q_UNUSED(stage);
+   (void) body;
+   (void) pattern;
+   (void) mode;
+   (void) stage;
 }
 
 void ExpressionFactory::processNamedTemplate(const QXmlName &name,
-      const Expression::Ptr &tree,
-      const TemplateCompilationStage stage)
+      const Expression::Ptr &tree, const TemplateCompilationStage stage)
 {
-   Q_UNUSED(name);
-   Q_UNUSED(tree);
-   Q_UNUSED(stage);
+   (void) name;
+   (void) tree;
+   (void) stage;
 }
 
 } // namespace QPatternist
-
-QT_END_NAMESPACE
 

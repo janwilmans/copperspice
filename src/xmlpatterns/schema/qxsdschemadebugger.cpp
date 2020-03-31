@@ -96,9 +96,11 @@ void XsdSchemaDebugger::dumpType(const SchemaType::Ptr &type)
 {
    if (type->isComplexType()) {
       const XsdComplexType::Ptr complexType(type);
+
       qDebug("\n+++ Complex Type +++");
       qDebug("Name: %s (abstract: %s)", qPrintable(complexType->displayName(m_namePool)),
              complexType->isAbstract() ? "yes" : "no");
+
       if (complexType->wxsSuperType()) {
          qDebug("  base type: %s", qPrintable(complexType->wxsSuperType()->displayName(m_namePool)));
       } else {
@@ -125,7 +127,7 @@ void XsdSchemaDebugger::dumpType(const SchemaType::Ptr &type)
       }
 
       const XsdAttributeUse::List uses = complexType->attributeUses();
-      qDebug("   %ld attributes", uses.count());
+      qDebug("   %zd attributes", uses.count());
 
       for (int i = 0; i < uses.count(); ++i) {
          qDebug("      attr: %s", qPrintable(uses.at(i)->attribute()->displayName(m_namePool)));
@@ -143,6 +145,7 @@ void XsdSchemaDebugger::dumpType(const SchemaType::Ptr &type)
    } else {
       qDebug("\n+++ Simple Type +++");
       qDebug("Name: %s", qPrintable(type->displayName(m_namePool)));
+
       if (type->isDefinedBySchema()) {
          const XsdSimpleType::Ptr simpleType(type);
          if (simpleType->primitiveType()) {
@@ -151,6 +154,7 @@ void XsdSchemaDebugger::dumpType(const SchemaType::Ptr &type)
             qDebug("  primitive type: (none)");
          }
       }
+
       dumpInheritance(type, 0);
    }
 }

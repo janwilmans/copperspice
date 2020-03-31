@@ -24,10 +24,8 @@
 #ifndef QIODEVICEDELEGATE_P_H
 #define QIODEVICEDELEGATE_P_H
 
-#include <QtCore/QTimer>
-#include <QtNetwork/QNetworkReply>
-
-QT_BEGIN_NAMESPACE
+#include <qtimer.h>
+#include <qnetwork_reply.h>
 
 namespace QPatternist {
 /**
@@ -75,7 +73,5 @@ class QIODeviceDelegate : public QNetworkReply
    QTimer m_timeout;
 };
 }
-
-QT_END_NAMESPACE
 
 #endif

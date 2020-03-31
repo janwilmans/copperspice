@@ -1963,10 +1963,15 @@ void QTextControlPrivate::mouseDoubleClickEvent(QEvent *e, Qt::MouseButton butto
    }
 }
 
-bool QTextControlPrivate::sendMouseEventToInputContext(
-   QEvent *e, QEvent::Type eventType, Qt::MouseButton button, const QPointF &pos,
-   Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, const QPoint &globalPos)
+bool QTextControlPrivate::sendMouseEventToInputContext(QEvent *e, QEvent::Type eventType,
+            Qt::MouseButton button, const QPointF &pos, Qt::KeyboardModifiers modifiers,
+            Qt::MouseButtons buttons, const QPoint &globalPos)
 {
+   (void) button;
+   (void) modifiers;
+   (void) buttons;
+   (void) globalPos;
+
 #if ! defined(QT_NO_IM)
    Q_Q(QTextControl);
 

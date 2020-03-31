@@ -1258,9 +1258,10 @@ bool QScrollerPrivate::scrollingSegmentsValid(Qt::Orientation orientation)
 /*! \internal
    Creates the sections needed to scroll to the specific \a endPos to the segments queue.
 */
-void QScrollerPrivate::createScrollToSegments(qreal v, qreal deltaTime, qreal endPos, Qt::Orientation orientation, ScrollType type)
+void QScrollerPrivate::createScrollToSegments(qreal v, qreal deltaTime, qreal endPos,
+               Qt::Orientation orientation, ScrollType type)
 {
-   Q_UNUSED(v);
+   (void) v;
 
    if (orientation == Qt::Horizontal) {
       xSegments.clear();

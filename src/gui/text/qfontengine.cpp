@@ -71,6 +71,13 @@ static inline bool qSafeFromBigEndian(const uchar *source, const uchar *end, T *
 
 int QFontEngine::getPointInOutline(glyph_t glyph, int flags, quint32 point, QFixed *xpos, QFixed *ypos, quint32 *nPoints)
 {
+   (void) glyph;
+   (void) flags;
+   (void) point;
+   (void) xpos;
+   (void) ypos;
+   (void) nPoints;
+
    // not valid at the base class, returns Err_Not_Covered in harfbuzz
    return -1;
 }
@@ -84,9 +91,9 @@ static bool qt_get_font_table_default(void *user_data, uint tag, uchar *buffer, 
 #define kBearingNotInitialized std::numeric_limits<qreal>::max()
 
 QFontEngine::QFontEngine(Type type)
-   : ref(0), m_hb_font(nullptr), font_destroy_func_ptr(nullptr), m_hb_face(nullptr), face_destroy_func_ptr(nullptr),
-     m_type(type),
-     m_minLeftBearing(kBearingNotInitialized), m_minRightBearing(kBearingNotInitialized)
+   : ref(0), m_hb_font(nullptr), font_destroy_func_ptr(nullptr), m_hb_face(nullptr),
+     face_destroy_func_ptr(nullptr), m_type(type), m_minLeftBearing(kBearingNotInitialized),
+     m_minRightBearing(kBearingNotInitialized)
 {
    faceData.user_data = this;
    faceData.font_table_func_ptr = qt_get_font_table_default;
@@ -697,6 +704,8 @@ void QFontEngine::addGlyphsToPath(glyph_t *glyphs, QFixedPoint *positions, int n
 
 QImage QFontEngine::alphaMapForGlyph(glyph_t glyph, QFixed subPixelPosition)
 {
+   (void) subPixelPosition;
+
    // For font engines, do not support subpixel positioning
    return alphaMapForGlyph(glyph);
 }
@@ -731,6 +740,8 @@ QImage QFontEngine::alphaMapForGlyph(glyph_t glyph, QFixed subPixelPosition, con
 
 QImage QFontEngine::alphaRGBMapForGlyph(glyph_t glyph, QFixed subPixelPosition, const QTransform &t)
 {
+   (void) subPixelPosition;
+
    const QImage alphaMask = alphaMapForGlyph(glyph, t);
    QImage rgbMask(alphaMask.width(), alphaMask.height(), QImage::Format_RGB32);
 
@@ -749,6 +760,8 @@ QImage QFontEngine::alphaRGBMapForGlyph(glyph_t glyph, QFixed subPixelPosition, 
 
 QImage QFontEngine::bitmapForGlyph(glyph_t, QFixed subPixelPosition, const QTransform &)
 {
+   (void) subPixelPosition;
+
    return QImage();
 }
 
@@ -880,6 +893,10 @@ void QFontEngine::getUnscaledGlyph(glyph_t glyph, QPainterPath *path, glyph_metr
 
 bool QFontEngine::getSfntTableData(uint tag, uchar *buffer, uint *length) const
 {
+   (void) tag;
+   (void) buffer;
+   (void) length;
+
    return false;
 }
 
@@ -1490,6 +1507,7 @@ QFixed QFontEngine::lastRightBearing(const QGlyphLayout &glyphs, bool round)
 
    return 0;
 }
+
 QFontEngine::GlyphCacheEntry::GlyphCacheEntry()
 {
 }
@@ -1527,6 +1545,7 @@ QFontEngineBox::~QFontEngineBox()
 
 glyph_t QFontEngineBox::glyphIndex(char32_t ch) const
 {
+   (void) ch;
    return 0;
 }
 
@@ -1652,6 +1671,7 @@ qreal QFontEngineBox::maxCharWidth() const
 
 bool QFontEngineBox::canRender(QStringView str) const
 {
+   (void) str;
    return true;
 }
 
@@ -1904,6 +1924,9 @@ bool QFontEngineMulti::stringToCMap(QStringView str, QGlyphLayout *glyphs, int *
 
 bool QFontEngineMulti::shouldLoadFontEngineForCharacter(int at, char32_t ch) const
 {
+   (void) at;
+   (void) ch;
+
    return true;
 }
 
@@ -1983,7 +2006,8 @@ void QFontEngineMulti::getGlyphBearings(glyph_t glyph, qreal *leftBearing, qreal
    engine(which)->getGlyphBearings(stripped(glyph), leftBearing, rightBearing);
 }
 
-void QFontEngineMulti::addOutlineToPath(qreal x, qreal y, const QGlyphLayout &glyphs, QPainterPath *path, QTextItem::RenderFlags flags)
+void QFontEngineMulti::addOutlineToPath(qreal x, qreal y, const QGlyphLayout &glyphs,
+                  QPainterPath *path, QTextItem::RenderFlags flags)
 {
    if (glyphs.numGlyphs <= 0) {
       return;

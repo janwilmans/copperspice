@@ -281,17 +281,13 @@ QTextFrameLayoutData *QTextFrame::layoutData() const
    return d->layoutData;
 }
 
-/*!
-  \internal
-*/
+
 void QTextFrame::setLayoutData(QTextFrameLayoutData *data)
 {
    Q_D(QTextFrame);
    delete d->layoutData;
    d->layoutData = data;
 }
-
-
 
 void QTextFramePrivate::fragmentAdded(QChar type, uint fragment)
 {
@@ -313,7 +309,8 @@ void QTextFramePrivate::fragmentAdded(QChar type, uint fragment)
 
 void QTextFramePrivate::fragmentRemoved(QChar type, uint fragment)
 {
-   Q_UNUSED(fragment); // --release warning
+   (void) fragment;
+
    if (type == QTextBeginningOfFrame) {
       Q_ASSERT(fragment_start == fragment);
       fragment_start = 0;

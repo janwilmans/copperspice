@@ -24,8 +24,8 @@
 #ifndef QAccelTreeResourceLoader_P_H
 #define QAccelTreeResourceLoader_P_H
 
-#include <QtCore/QEventLoop>
-#include <QtNetwork/QNetworkReply>
+#include <qeventloop.h>
+#include <qnetwork_reply.h>
 
 #include "qabstractxmlreceiver.h"
 #include "qacceltree_p.h"
@@ -34,8 +34,6 @@
 #include "qnamepool_p.h"
 #include "qnetworkaccessdelegator_p.h"
 #include "qreportcontext_p.h"
-
-QT_BEGIN_NAMESPACE
 
 class QIODevice;
 
@@ -102,7 +100,7 @@ class AccelTreeResourceLoader : public DeviceResourceLoader
     */
    QSet<QUrl> deviceURIs() const override;
 
-   void clear(const QUrl &uri) override; 
+   void clear(const QUrl &uri) override;
 
  private:
    static bool streamToReceiver(QIODevice *const dev, AccelTreeBuilder<true> *const receiver,
@@ -123,7 +121,5 @@ class AccelTreeResourceLoader : public DeviceResourceLoader
    AccelTreeBuilder<true>::Features        m_features;
 };
 }
-
-QT_END_NAMESPACE
 
 #endif
