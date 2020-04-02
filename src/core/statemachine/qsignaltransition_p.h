@@ -21,28 +21,22 @@
 *
 ***********************************************************************/
 
-#ifndef QEVENTTRANSITION_P_H
-#define QEVENTTRANSITION_P_H
+#ifndef QSIGNALTRANSITION_P_H
+#define QSIGNALTRANSITION_P_H
 
 #include <qabstracttransition_p.h>
 
-class QEventTransition;
+class QSignalTransition;
 
-class Q_CORE_EXPORT QEventTransitionPrivate : public QAbstractTransitionPrivate
+// minimized class
+class QSignalTransitionPrivate : public QAbstractTransitionPrivate
 {
-   Q_DECLARE_PUBLIC(QEventTransition)
-
  public:
-   QEventTransitionPrivate();
+   void callOnTransition(QEvent *e) override;
 
-   static QEventTransitionPrivate *get(QEventTransition *q);
+ private:
+   Q_DECLARE_PUBLIC(QSignalTransition)
 
-   void unregister();
-   void maybeRegister();
-
-   bool registered;
-   QObject *object;
-   QEvent::Type eventType;
 };
 
 #endif
