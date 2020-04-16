@@ -116,10 +116,10 @@ jobs:
       cmake --build release_x64
     displayName: 'Build leftovers'
 
-- job: macos_10_13_Release_x64
+- job: macos_10_14_Release_x64
   timeoutInMinutes: 0
   pool:
-    vmImage: macos-10.13
+    vmImage: macos-10.14
   steps:
   - script: |
       ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
@@ -127,12 +127,12 @@ jobs:
     displayName: 'Prepare System'
   - script: |
       set
-      set CMAKE_OSX_DEPLOYMENT_TARGET=10.13
+      set CMAKE_OSX_DEPLOYMENT_TARGET=10.14
       mkdir release_x64
       pushd release_x64
       cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
       popd
-    displayName: 'Configure CMake Generator for XCode 10.12'
+    displayName: 'Configure CMake Generator for XCode 10.14'
   - script: |
       cmake --build release_x64 --target CsCore
     displayName: 'Build Core'
