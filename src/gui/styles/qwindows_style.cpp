@@ -1841,11 +1841,13 @@ void QWindowsStyle::drawControl(ControlElement ce, const QStyleOption *opt, QPai
 
                int step = 0;
                int chunkCount = w / unit_width + 1;
-               if (QProgressStyleAnimation *animation = qobject_cast<QProgressStyleAnimation *>(d->animation(opt->styleObject))) {
+
+               if (QProgressStyleAnimation *animation = dynamic_cast<QProgressStyleAnimation *>(d->animationValue(opt->styleObject))) {
                   step = (animation->animationStep() / 3) % chunkCount;
                } else {
                   d->startAnimation(new QProgressStyleAnimation(d->animationFps, opt->styleObject));
                }
+
                int chunksInRow = 5;
                int myY = pbBits.rect.y();
                int myHeight = pbBits.rect.height();
@@ -2445,27 +2447,29 @@ QSize QWindowsStyle::sizeFromContents(ContentsType ct, const QStyleOption *opt,
    const QSize &csz, const QWidget *widget) const
 {
    QSize sz(csz);
+
    switch (ct) {
       case CT_PushButton:
          if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
             sz = QCommonStyle::sizeFromContents(ct, opt, csz, widget);
-            int w = sz.width(),
-                h = sz.height();
+            int w = sz.width();
+            int h = sz.height();
+
             int defwidth = 0;
             if (btn->features & QStyleOptionButton::AutoDefaultButton) {
                defwidth = 2 * proxy()->pixelMetric(PM_ButtonDefaultIndicator, btn, widget);
             }
-            int minwidth = int(QStyleHelper::dpiScaled(75.));
+
+            int minwidth  = int(QStyleHelper::dpiScaled(75.));
             int minheight = int(QStyleHelper::dpiScaled(23.));
 
-#ifndef QT_QWS_SMALL_PUSHBUTTON
             if (w < minwidth + defwidth && !btn->text.isEmpty()) {
                w = minwidth + defwidth;
             }
             if (h < minheight + defwidth) {
                h = minheight + defwidth;
             }
-#endif
+
             sz = QSize(w, h);
          }
          break;

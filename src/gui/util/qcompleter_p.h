@@ -26,11 +26,11 @@
 
 #ifndef QT_NO_COMPLETER
 
-#include <QtGui/qtreeview.h>
-#include <QtGui/qabstractproxymodel.h>
+#include <qtreeview.h>
+#include <qabstractproxymodel.h>
 #include <qcompleter.h>
-#include <QtGui/qitemdelegate.h>
-#include <QtGui/qpainter.h>
+#include <qitemdelegate.h>
+#include <qpainter.h>
 #include <qabstractproxymodel_p.h>
 
 class QCompletionModel;
@@ -240,8 +240,8 @@ class QCompletionModel : public QAbstractProxyModel
    QModelIndex currentIndex(bool) const;
 
    QModelIndex index(int row, int column, const QModelIndex & = QModelIndex()) const override;
-   int rowCount(const QModelIndex &index = QModelIndex()) const override;
-   int columnCount(const QModelIndex &index = QModelIndex()) const override;
+   int rowCount(const QModelIndex &index      = QModelIndex()) const override;
+   int columnCount(const QModelIndex &index   = QModelIndex()) const override;
    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
    QModelIndex parent(const QModelIndex & = QModelIndex()) const override {
@@ -258,18 +258,13 @@ class QCompletionModel : public QAbstractProxyModel
    QScopedPointer<QCompletionEngine> engine;
    bool showAll;
 
-
    GUI_CS_SIGNAL_1(Public, void rowsAdded())
    GUI_CS_SIGNAL_2(rowsAdded)
 
-   GUI_CS_SLOT_1(Public, void invalidate())
-   GUI_CS_SLOT_2(invalidate)
-
-   GUI_CS_SLOT_1(Public, void rowsInserted())
-   GUI_CS_SLOT_2(rowsInserted)
-
-   GUI_CS_SLOT_1(Public, void modelDestroyed())
-   GUI_CS_SLOT_2(modelDestroyed)
+   // slots
+   void invalidate();
+   void rowsInserted();
+   void modelDestroyed();
 };
 
 class QCompletionModelPrivate : public QAbstractProxyModelPrivate

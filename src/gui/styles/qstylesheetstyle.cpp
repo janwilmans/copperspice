@@ -75,7 +75,7 @@ class QStyleSheetStylePrivate : public QWindowsStylePrivate
    QStyleSheetStylePrivate() { }
 };
 
-static QStyleSheetStyleCaches *styleSheetCaches = 0;
+static QStyleSheetStyleCaches *styleSheetCaches = nullptr;
 
 /* RECURSION_GUARD:
  * the QStyleSheetStyle is a proxy. If used with others proxy style, we may end up with something like:
@@ -1439,8 +1439,8 @@ QVector<QCss::StyleRule> QStyleSheetStyle::styleRules(const QObject *obj) const
       QStyle *bs = baseStyle();
       styleSheetCaches->styleSheetCache.insert(bs, defaultSs);
 
-      QObject::connect(bs, SIGNAL(destroyed(QObject *)), styleSheetCaches, SLOT(styleDestroyed(QObject *)),
-         Qt::UniqueConnection);
+      QObject::connect(bs, &QObject::destroyed, styleSheetCaches, &QStyleSheetStyleCaches::styleDestroyed, Qt::UniqueConnection);
+
    } else {
       defaultSs = defaultCacheIt.value();
    }
@@ -2825,8 +2825,7 @@ bool QStyleSheetStyle::initObject(const QObject *obj) const
       const_cast<QWidget *>(w)->setAttribute(Qt::WA_StyleSheet, true);
    }
 
-   QObject::connect(obj, SIGNAL(destroyed(QObject *)), styleSheetCaches, SLOT(objectDestroyed(QObject *)),
-      Qt::UniqueConnection);
+   QObject::connect(obj, &QObject::destroyed, styleSheetCaches, &QStyleSheetStyleCaches::objectDestroyed, Qt::UniqueConnection);
 
    return true;
 }
@@ -2981,6 +2980,7 @@ void QStyleSheetStyle::unpolish(QWidget *w)
    w->setProperty("_q_stylesheet_maxw", QVariant());
    w->setProperty("_q_stylesheet_maxh", QVariant());
    w->setAttribute(Qt::WA_StyleSheet, false);
+
    QObject::disconnect(w, 0, this, 0);
 
 #ifndef QT_NO_SCROLLAREA
@@ -4074,11 +4074,13 @@ void QStyleSheetStyle::drawControl(ControlElement ce, const QStyleOption *opt, Q
                if (pb->minimum == 0 && pb->maximum == 0) {
                   int chunkCount = fillWidth / chunkWidth;
                   int offset = 0;
-                  if (QProgressStyleAnimation *animation = qobject_cast<QProgressStyleAnimation *>(d->animation(opt->styleObject))) {
+
+                  if (QProgressStyleAnimation *animation = dynamic_cast<QProgressStyleAnimation *>(d->animationValue(opt->styleObject))) {
                      offset = animation->animationStep() * 8 % rect.width();
                   } else {
                      d->startAnimation(new QProgressStyleAnimation(d->animationFps, opt->styleObject));
                   }
+
                   int x = reverse ? r.left() + r.width() - offset - chunkWidth : r.x() + offset;
                   while (chunkCount > 0) {
                      r.setRect(x, rect.y(), chunkWidth, rect.height());

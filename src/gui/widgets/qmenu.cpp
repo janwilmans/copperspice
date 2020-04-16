@@ -306,7 +306,7 @@ void QMenuPrivate::updateActionRects(const QRect &screen) const
 
    QStyle *style = q->style();
    QStyleOption opt;
-   opt.init(q);
+   opt.initFrom(q);
 
    const int hmargin = style->pixelMetric(QStyle::PM_MenuHMargin, &opt, q);
    const int vmargin = style->pixelMetric(QStyle::PM_MenuVMargin, &opt, q);
@@ -1821,32 +1821,20 @@ void QMenu::clear()
    }
 }
 
-/*!
-  If a menu does not fit on the screen it lays itself out so that it
-  does fit. It is style dependent what layout means (for example, on
-  Windows it will use multiple columns).
-
-  This functions returns the number of columns necessary.
-*/
 int QMenu::columnCount() const
 {
    return d_func()->ncols;
 }
 
-/*!
-  Returns the item at \a pt; returns 0 if there is no item there.
-*/
 QAction *QMenu::actionAt(const QPoint &pt) const
 {
    if (QAction *ret = d_func()->actionAt(pt)) {
       return ret;
    }
-   return 0;
+
+   return nullptr;
 }
 
-/*!
-  Returns the geometry of action \a act.
-*/
 QRect QMenu::actionGeometry(QAction *act) const
 {
    return d_func()->actionRect(act);
@@ -1877,7 +1865,8 @@ QSize QMenu::sizeHint() const
    // the top and left margins, so we only need to add margins for
    // the bottom and right.
    QStyleOption opt(0);
-   opt.init(this);
+   opt.initFrom(this);
+
    const int fw = style()->pixelMetric(QStyle::PM_MenuPanelWidth, &opt, this);
    s.rwidth() += style()->pixelMetric(QStyle::PM_MenuHMargin, &opt, this) + fw + d->rightmargin;
    s.rheight() += style()->pixelMetric(QStyle::PM_MenuVMargin, &opt, this) + fw + d->bottommargin;
@@ -1886,20 +1875,6 @@ QSize QMenu::sizeHint() const
          s.expandedTo(QApplication::globalStrut()), this);
 }
 
-/*!
-    Displays the menu so that the action \a atAction will be at the
-    specified \e global position \a p. To translate a widget's local
-    coordinates into global coordinates, use QWidget::mapToGlobal().
-
-    When positioning a menu with exec() or popup(), bear in mind that
-    you cannot rely on the menu's current size(). For performance
-    reasons, the menu adapts its size only when necessary, so in many
-    cases, the size before and after the show is different. Instead,
-    use sizeHint() which calculates the proper size depending on the
-    menu's current contents.
-
-    \sa QWidget::mapToGlobal(), exec()
-*/
 void QMenu::popup(const QPoint &p, QAction *atAction)
 {
    Q_D(QMenu);
@@ -3090,8 +3065,10 @@ void QMenu::timerEvent(QTimerEvent *e)
       d->delayState.stop();
       d->sloppyState.stopTimer();
       internalDelayedPopup();
+
    } else if (d->sloppyState.isTimerId(e->timerId())) {
       d->sloppyState.timeout();
+
    } else if (d->searchBufferTimer.timerId() == e->timerId()) {
       d->searchBuffer.clear();
    }
@@ -3101,16 +3078,21 @@ static void copyActionToPlatformItem(const QAction *action, QPlatformMenuItem *i
 {
    item->setText(action->text());
    item->setIsSeparator(action->isSeparator());
+
    if (action->isIconVisibleInMenu()) {
       item->setIcon(action->icon());
+
       if (QWidget *w = action->parentWidget()) {
          QStyleOption opt;
-         opt.init(w);
+         opt.initFrom(w);
          item->setIconSize(w->style()->pixelMetric(QStyle::PM_SmallIconSize, &opt, w));
+
       } else {
+
          QStyleOption opt;
          item->setIconSize(qApp->style()->pixelMetric(QStyle::PM_SmallIconSize, &opt, 0));
       }
+
    } else {
       item->setIcon(QIcon());
    }

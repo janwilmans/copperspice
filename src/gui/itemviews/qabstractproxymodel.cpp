@@ -26,10 +26,10 @@
 #ifndef QT_NO_PROXYMODEL
 
 #include <qitemselectionmodel.h>
-#include <qabstractproxymodel_p.h>
-#include <QtCore/QSize>
-#include <QtCore/QStringList>
+#include <qsize.h>
+#include <qstringlist.h>
 
+#include <qabstractproxymodel_p.h>
 
 //detects the deletion of the source model
 void QAbstractProxyModelPrivate::_q_sourceModelDestroyed()
@@ -38,49 +38,35 @@ void QAbstractProxyModelPrivate::_q_sourceModelDestroyed()
    model = QAbstractItemModelPrivate::staticEmptyModel();
 }
 
-/*!
-    Constructs a proxy model with the given \a parent.
-*/
-
 QAbstractProxyModel::QAbstractProxyModel(QObject *parent)
    : QAbstractItemModel(*new QAbstractProxyModelPrivate, parent)
 {
    setSourceModel(QAbstractItemModelPrivate::staticEmptyModel());
 }
 
-/*!
-    \internal
-*/
-
+// internal (cs)
 QAbstractProxyModel::QAbstractProxyModel(QAbstractProxyModelPrivate &dd, QObject *parent)
    : QAbstractItemModel(dd, parent)
 {
    setSourceModel(QAbstractItemModelPrivate::staticEmptyModel());
 }
 
-/*!
-    Destroys the proxy model.
-*/
 QAbstractProxyModel::~QAbstractProxyModel()
 {
-
 }
 
-/*!
-    Sets the given \a sourceModel to be processed by the proxy model.
-*/
 void QAbstractProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
 {
    Q_D(QAbstractProxyModel);
 
    if (sourceModel != d->model) {
       if (d->model) {
-         disconnect(d->model, SIGNAL(destroyed()), this, SLOT(_q_sourceModelDestroyed()));
+         disconnect(d->model, &QObject::destroyed, this, &QAbstractProxyModel::_q_sourceModelDestroyed);
       }
 
       if (sourceModel) {
          d->model = sourceModel;
-         connect(d->model, SIGNAL(destroyed()), this, SLOT(_q_sourceModelDestroyed()));
+         connect(d->model, &QObject::destroyed, this, &QAbstractProxyModel::_q_sourceModelDestroyed);
       } else {
          d->model = QAbstractItemModelPrivate::staticEmptyModel();
       }
@@ -89,7 +75,6 @@ void QAbstractProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
       emit sourceModelChanged();
    }
 }
-
 
 void QAbstractProxyModel::resetInternalData()
 {
@@ -106,52 +91,23 @@ QAbstractItemModel *QAbstractProxyModel::sourceModel() const
    return d->model;
 }
 
-/*!
-    \reimp
- */
 bool QAbstractProxyModel::submit()
 {
    Q_D(QAbstractProxyModel);
    return d->model->submit();
 }
 
-/*!
-    \reimp
- */
 void QAbstractProxyModel::revert()
 {
    Q_D(QAbstractProxyModel);
    d->model->revert();
 }
 
-
-/*!
-  \fn QModelIndex QAbstractProxyModel::mapToSource(const QModelIndex &proxyIndex) const
-
-  Reimplement this function to return the model index in the source model that
-  corresponds to the \a proxyIndex in the proxy model.
-
-  \sa mapFromSource()
-*/
-
-/*!
-  \fn QModelIndex QAbstractProxyModel::mapFromSource(const QModelIndex &sourceIndex) const
-
-  Reimplement this function to return the model index in the proxy model that
-  corresponds to the \a sourceIndex from the source model.
-
-  \sa mapToSource()
-*/
-
-/*!
-  Returns a source selection mapped from the specified \a proxySelection.
-
-  Reimplement this method to map proxy selections to source selections.
- */
 QItemSelection QAbstractProxyModel::mapSelectionToSource(const QItemSelection &proxySelection) const
 {
    QModelIndexList proxyIndexes = proxySelection.indexes();
    QItemSelection sourceSelection;
+
    for (int i = 0; i < proxyIndexes.size(); ++i) {
       const QModelIndex proxyIdx = mapToSource(proxyIndexes.at(i));
       if (!proxyIdx.isValid()) {
@@ -162,15 +118,11 @@ QItemSelection QAbstractProxyModel::mapSelectionToSource(const QItemSelection &p
    return sourceSelection;
 }
 
-/*!
-  Returns a proxy selection mapped from the specified \a sourceSelection.
-
-  Reimplement this method to map source selections to proxy selections.
-*/
 QItemSelection QAbstractProxyModel::mapSelectionFromSource(const QItemSelection &sourceSelection) const
 {
    QModelIndexList sourceIndexes = sourceSelection.indexes();
    QItemSelection proxySelection;
+
    for (int i = 0; i < sourceIndexes.size(); ++i) {
       const QModelIndex srcIdx = mapFromSource(sourceIndexes.at(i));
       if (!srcIdx.isValid()) {
@@ -178,12 +130,10 @@ QItemSelection QAbstractProxyModel::mapSelectionFromSource(const QItemSelection 
       }
       proxySelection << QItemSelectionRange(srcIdx);
    }
+
    return proxySelection;
 }
 
-/*!
-    \reimp
- */
 QVariant QAbstractProxyModel::data(const QModelIndex &proxyIndex, int role) const
 {
    Q_D(const QAbstractProxyModel);

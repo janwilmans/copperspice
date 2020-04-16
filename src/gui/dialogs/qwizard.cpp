@@ -871,7 +871,7 @@ void QWizardPrivate::addField(const QWizardField &field)
       QObject::connect(myField.object, myField.changedSignal, myField.page, SLOT(_q_maybeEmitCompleteChanged()));
    }
 
-   QObject::connect(myField.object, SIGNAL(destroyed(QObject *)), q, SLOT(_q_handleFieldObjectDestroyed(QObject *)));
+   QObject::connect(myField.object, &QObject::destroyed, q, &QWizard::_q_handleFieldObjectDestroyed);
 }
 
 void QWizardPrivate::removeFieldAt(int index)
@@ -885,7 +885,7 @@ void QWizardPrivate::removeFieldAt(int index)
       QObject::disconnect(field.object, field.changedSignal, field.page, SLOT(_q_maybeEmitCompleteChanged()));
    }
 
-   QObject::disconnect(field.object, SIGNAL(destroyed(QObject *)), q, SLOT(_q_handleFieldObjectDestroyed(QObject *)));
+   QObject::disconnect(field.object, &QObject::destroyed, q, &QWizard::_q_handleFieldObjectDestroyed);
    fields.remove(index);
 }
 
@@ -1871,8 +1871,10 @@ void QWizardPrivate::_q_handleFieldObjectDestroyed(QObject *object)
 {
    int destroyed_index = -1;
    QVector<QWizardField>::iterator it = fields.begin();
+
    while (it != fields.end()) {
       const QWizardField &field = *it;
+
       if (field.object == object) {
          destroyed_index = fieldIndexMap.value(field.name, -1);
          fieldIndexMap.remove(field.name);
@@ -1881,8 +1883,10 @@ void QWizardPrivate::_q_handleFieldObjectDestroyed(QObject *object)
          ++it;
       }
    }
+
    if (destroyed_index != -1) {
       QMap<QString, int>::iterator it2 = fieldIndexMap.begin();
+
       while (it2 != fieldIndexMap.end()) {
          int index = it2.value();
          if (index > destroyed_index) {
@@ -3153,10 +3157,10 @@ void QWizard::_q_updateButtonStates()
    d->_q_updateButtonStates();
 }
 
-void QWizard::_q_handleFieldObjectDestroyed(QObject *un_named_arg1)
+void QWizard::_q_handleFieldObjectDestroyed(QObject *obj)
 {
    Q_D(QWizard);
-   d->_q_handleFieldObjectDestroyed(un_named_arg1);
+   d->_q_handleFieldObjectDestroyed(obj);
 }
 
 void QWizardPage::_q_maybeEmitCompleteChanged()

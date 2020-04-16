@@ -519,26 +519,17 @@ void QComboBoxPrivateContainer::updateScrollers()
 #endif // QT_NO_SCROLLBAR
 }
 
-/*
-    Cleans up when the view is destroyed.
-*/
 void QComboBoxPrivateContainer::viewDestroyed()
 {
    view = 0;
    setItemView(new QComboBoxListView());
 }
 
-/*
-    Returns the item view used for the combobox popup.
-*/
 QAbstractItemView *QComboBoxPrivateContainer::itemView() const
 {
    return view;
 }
 
-/*!
-    Sets the item view to be used for the combobox popup.
-*/
 void QComboBoxPrivateContainer::setItemView(QAbstractItemView *itemView)
 {
    Q_ASSERT(itemView);
@@ -553,7 +544,7 @@ void QComboBoxPrivateContainer::setItemView(QAbstractItemView *itemView)
       disconnect(view->verticalScrollBar(), SIGNAL(rangeChanged(int, int)), this, SLOT(updateScrollers()));
 #endif
 
-      disconnect(view, SIGNAL(destroyed()), this, SLOT(viewDestroyed()));
+      disconnect(view, &QObject::destroyed, this, &QComboBoxPrivateContainer::viewDestroyed);
 
       delete view;
       view = 0;
@@ -591,7 +582,7 @@ void QComboBoxPrivateContainer::setItemView(QAbstractItemView *itemView)
    connect(view->verticalScrollBar(), SIGNAL(rangeChanged(int, int)), this, SLOT(updateScrollers()));
 #endif
 
-   connect(view, SIGNAL(destroyed()), this, SLOT(viewDestroyed()));
+   connect(view, &QObject::destroyed, this, &QComboBoxPrivateContainer::viewDestroyed);
 }
 
 int QComboBoxPrivateContainer::topMargin() const
@@ -1223,22 +1214,18 @@ int QComboBoxPrivate::itemRole() const
    return q_func()->isEditable() ? Qt::EditRole : Qt::DisplayRole;
 }
 
-/*!
-    Destroys the combobox.
-*/
 QComboBox::~QComboBox()
 {
    // ### check delegateparent and delete delegate if us?
    Q_D(QComboBox);
 
-   QT_TRY {
-      disconnect(d->model, SIGNAL(destroyed()), this, SLOT(_q_modelDestroyed()));
+   try {
+      disconnect(d->model, &QAbstractItemModel::destroyed, this, &QComboBox::_q_modelDestroyed);
 
-   } QT_CATCH(...) {
-      ; // objects can not throw in destructor
+   } catch(...) {
+      ;
    }
 }
-
 
 int QComboBox::maxVisibleItems() const
 {
@@ -1249,6 +1236,7 @@ int QComboBox::maxVisibleItems() const
 void QComboBox::setMaxVisibleItems(int maxItems)
 {
    Q_D(QComboBox);
+
    if (maxItems < 0) {
       qWarning("QComboBox::setMaxVisibleItems: "
          "Invalid max visible items (%d) must be >= 0", maxItems);

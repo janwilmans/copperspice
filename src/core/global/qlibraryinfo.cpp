@@ -33,7 +33,7 @@
 #include <cs_build_info.h>
 
 #ifdef Q_OS_DARWIN
-#  include "qcore_mac_p.h"
+#  include <qcore_mac_p.h>
 #endif
 
 #ifndef QT_NO_SETTINGS
@@ -47,14 +47,19 @@ struct QLibrarySettings
 
     QScopedPointer<QSettings> settings;
     bool reloadOnQAppAvailable;
-
 };
-Q_GLOBAL_STATIC(QLibrarySettings, qt_library_settings)
+
+static QLibrarySettings *qt_library_settings()
+{
+   static QLibrarySettings retval;
+   return &retval;
+}
 
 class QLibraryInfoPrivate
 {
 public:
     static QSettings *findConfiguration();
+
     static QSettings *configuration()
     {
         QLibrarySettings *ls = qt_library_settings();
@@ -79,29 +84,30 @@ QLibrarySettings::QLibrarySettings()
 
 void QLibrarySettings::load()
 {
-    settings.reset(QLibraryInfoPrivate::findConfiguration());
-    reloadOnQAppAvailable = (settings.data() == 0 && QCoreApplication::instance() == 0);
+   settings.reset(QLibraryInfoPrivate::findConfiguration());
+   reloadOnQAppAvailable = (settings.data() == nullptr && QCoreApplication::instance() == nullptr);
 
-    bool haveDevicePaths;
-    bool haveEffectivePaths;
-    bool havePaths;
+   bool haveDevicePaths;
+   bool haveEffectivePaths;
+   bool havePaths;
 
-    if (settings) {
+   if (settings != nullptr) {
 
-        QStringList children = settings->childGroups();
-        haveDevicePaths = children.contains("DevicePaths");
+     QStringList children = settings->childGroups();
+     haveDevicePaths = children.contains("DevicePaths");
 
-        // EffectiveSourcePaths is for the build only
-        bool haveEffectiveSourcePaths = false;
-        haveEffectivePaths = haveEffectiveSourcePaths || children.contains("EffectivePaths");
+     // EffectiveSourcePaths is for the build only
+     bool haveEffectiveSourcePaths = false;
+     haveEffectivePaths = haveEffectiveSourcePaths || children.contains("EffectivePaths");
 
-        // an existing but empty file claimed to contain the Paths section
-        havePaths = (! haveDevicePaths && ! haveEffectivePaths
-                     && ! children.contains(platformsSection)) || children.contains("Paths");
-        if (! havePaths) {
-            settings.reset(0);
-        }
-    }
+     // an existing but empty file claimed to contain the Paths section
+     havePaths = (! haveDevicePaths && ! haveEffectivePaths
+                  && ! children.contains(platformsSection)) || children.contains("Paths");
+
+     if (! havePaths) {
+        settings.reset(nullptr);
+     }
+   }
 }
 
 QSettings *QLibraryInfoPrivate::findConfiguration()
@@ -114,8 +120,8 @@ QSettings *QLibraryInfoPrivate::findConfiguration()
       CFBundleRef bundleRef = CFBundleGetMainBundle();
 
       if (bundleRef) {
-         QCFType<CFURLRef> urlRef = CFBundleCopyResourceURL(bundleRef,
-               QCFString("cs.conf"), 0, 0);
+         // locates the cs.conf file in foo.app/Contents/Resources
+         QCFType<CFURLRef> urlRef = CFBundleCopyResourceURL(bundleRef, QCFString("cs.conf"), 0, 0);
 
          if (urlRef) {
             QCFString path = CFURLCopyFileSystemPath(urlRef, kCFURLPOSIXPathStyle);
@@ -132,10 +138,11 @@ QSettings *QLibraryInfoPrivate::findConfiguration()
    }
 
    if (QFile::exists(qtconfig)) {
-      return new QSettings(qtconfig, QSettings::IniFormat);
+      QSettings *tmp = new QSettings(qtconfig, QSettings::IniFormat);
+      return tmp;
    }
 
-   return 0;     // no luck
+   return nullptr;     // no luck
 }
 
 #endif // QT_NO_SETTINGS
@@ -167,19 +174,23 @@ QString QLibraryInfo::licensedProducts()
 QString QLibraryInfo::location(LibraryLocation loc)
 {
    QString retval;
-
    QSettings *config = nullptr;
 
 #if ! defined(QT_NO_SETTINGS)
+   // raw pointer to a QSettings object, this is a ptr to the cs.conf data
    config = QLibraryInfoPrivate::configuration();
 #endif
 
-   if (config) {
-
+   if (config != nullptr) {
       QString key;
       QString defaultValue;
 
       switch (loc) {
+
+         case PrefixPath:
+            key = "Prefix";
+            defaultValue = ".";
+            break;
 
          case PluginsPath:
             key = "Plugins";
@@ -230,9 +241,13 @@ QString QLibraryInfo::location(LibraryLocation loc)
       }
 
    }  else {
-      // no configuration file, use defaults
+      // no cs.conf file just use default values
 
       switch (loc) {
+
+         case PrefixPath:
+            retval = ".";
+            break;
 
          case PluginsPath:
             retval = "plugins";
@@ -257,6 +272,45 @@ QString QLibraryInfo::location(LibraryLocation loc)
          default:
             break;
       }
+   }
+
+   if (! retval.isEmpty() && QDir::isRelativePath(retval)){
+      QString baseDir;
+
+      if (loc == PrefixPath) {
+         if (QCoreApplication::instance())  {
+
+#ifdef Q_OS_DARWIN
+            CFBundleRef bundleRef = CFBundleGetMainBundle();
+
+            if (bundleRef) {
+               QCFType<CFURLRef> urlRef = CFBundleCopyBundleURL(bundleRef);
+
+               if (urlRef) {
+                  QCFString path = CFURLCopyFileSystemPath(urlRef, kCFURLPOSIXPathStyle);
+
+                  QString bundleContentsDir = QString(path) + "/Contents/";
+
+                  if (QDir(bundleContentsDir).exists()) {
+                     return QDir::cleanPath(bundleContentsDir + retval);
+                  }
+               }
+            }
+#endif
+            // make the prefix path absolute to the exe directory
+            baseDir = QCoreApplication::applicationDirPath();
+
+         } else {
+            baseDir = QDir::currentPath();
+         }
+
+      } else {
+         // make any other path absolute to the prefix directory
+         baseDir = location(PrefixPath);
+
+      }
+
+      retval = QDir::cleanPath(baseDir + '/' + retval);
    }
 
    return retval;

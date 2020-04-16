@@ -37,11 +37,13 @@ class QCommonStylePrivate : public QStylePrivate
    Q_DECLARE_PUBLIC(QCommonStyle)
 
  public:
-   inline QCommonStylePrivate() :
+   QCommonStylePrivate()
+
 #ifndef QT_NO_ITEMVIEWS
-      cachedOption(0),
+      : cachedOption(0), animationFps(30)
+#else
+      : animationFps(30)
 #endif
-      animationFps(30)
    { }
 
    ~QCommonStylePrivate() {
@@ -89,10 +91,11 @@ class QCommonStylePrivate : public QStylePrivate
    int animationFps;
 
 #ifndef QT_NO_ANIMATION
-   void _q_removeAnimation();
+   void _q_removeAnimation(QObject *obj);
 
-   QList<const QObject *> animationTargets() const;
-   QStyleAnimation *animation(const QObject *target) const;
+   QList<const QObject *> animationKeys() const;
+   QStyleAnimation *animationValue(const QObject *target) const;
+
    void startAnimation(QStyleAnimation *animation) const;
    void stopAnimation(const QObject *target) const;
 
