@@ -1,6 +1,6 @@
 ## Azure badges
 
-Status: no known build issues.
+Status: VS2019 running out of heap memory on Azure Pipelines, under investigation. (locally OK)
 
 [![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2017_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Windows 10, Microsoft Visual Studio 2017, Release x64
 
