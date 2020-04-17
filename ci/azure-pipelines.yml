@@ -63,7 +63,9 @@ jobs:
       pushd release_x64
       cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
       popd
-      python ci\pype.py logs\copperspice_capture.txt -- cmake --build release_x64 --verbose
+      python ci\pype.py logs\cs_2019.txt -- cmake --build release_x64 --verbose || echo exit-code $? suppressed
+      python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build release_x64 --target CsGui --verbose
+      python ci\pype.py logs\cs_2019_finish.txt -- cmake --build release_x64 --verbose
     displayName: 'Build using VS2019 via Ninja'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs_vs2019
