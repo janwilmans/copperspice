@@ -56,14 +56,15 @@ jobs:
     inputs:
       versionSpec: '3.6'
   - script: |
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars32.bat"
+      rd /s /q c:\mysql-5.7.21-winx64
       set
       mkdir logs
       mkdir release_x64
       pushd release_x64
-      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
+      cmake -DWITH_MYSQL=0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
       popd
-      python ci\pype.py logs\cs_2019.txt -- cmake --build release_x64 --verbose || echo exit-code $? suppressed
+      python ci\pype.py logs\cs_2019.txt -- cmake --build release_x64 --verbose
       python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build release_x64 --target CsGui --verbose
       python ci\pype.py logs\cs_2019_finish.txt -- cmake --build release_x64 --verbose
     displayName: 'Build using VS2019 via Ninja'
