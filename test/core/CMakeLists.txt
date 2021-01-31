@@ -4,7 +4,7 @@ include(CTest)
 add_executable(CsCoreTest "")
 set_target_properties(CsCoreTest
    PROPERTIES
-   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/test"
+   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
 file(WRITE ${CMAKE_BINARY_DIR}/bin/test/run_coretest.bat
