@@ -1,3 +1,12 @@
+## Azure badges
+
+[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=msvc_2019_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Windows 10, Microsoft Visual Studio 2019, Release x64
+
+[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=Ubuntu_18_04_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) Ubuntu 18.04, GCC 7.4.0, Release x64
+
+[![Build Status](https://dev.azure.com/copperspice/copperspice-msvc/_apis/build/status/janwilmans.copperspice-msvc?branchName=master&jobName=macos_10_14_Release_x64)](https://dev.azure.com/copperspice/copperspice-msvc/_build/latest?definitionId=8&branchName=master) MacOS 10.14, Release X64
+
+
 ## CopperSpice
 
 ### Introduction

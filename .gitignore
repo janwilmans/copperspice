@@ -31,3 +31,10 @@
 /utilities/unicode/**/*.Po
 
 /utilities/harfbuzz_fonts/generate_qrc.sh
+
+x64/
+out/
+.vs/
+CMakeFiles/
+.vscode/
+build/
