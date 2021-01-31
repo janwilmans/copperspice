@@ -54,27 +54,21 @@ the number of characters that may be substituted.
 Returns an open handle to the newly created file if successful, an invalid handle otherwise. In both cases, the string
 in  path will be changed and contain the generated path name.
 */
-
 static QString createFileName(QString fName, size_t pos, size_t length)
 {
-   auto placeholderStart_iter = fName.begin() + pos;
-   auto placeholderEnd_iter   = placeholderStart_iter + length;
-
-   QString::iterator iter     = placeholderEnd_iter - 1;
-
-   while (iter >= placeholderStart_iter) {
+   QString name = fName.substr(0, pos);
+   for (int i = 0; i < length; ++i)
+   {
       char32_t ch = static_cast<char32_t>((qrand() & 0xffff) % (26 + 26));
 
       if (ch < 26) {
-         fName.replace(iter, iter + 1, QString(static_cast<char32_t>(ch + U'A')));
+         name += QString(static_cast<char32_t>(ch + U'A'));
       } else {
-         fName.replace(iter, iter + 1, QString(static_cast<char32_t>(ch - 26 + U'a')));
+         name += QString(static_cast<char32_t>(ch - 26 + U'a'));
       }
-
-      --iter;
    }
 
-   return fName;
+   return name + fName.substr(pos + length);
 }
 
 static bool createFileFromTemplate(NativeFileHandle &fHandle, QString &fName,
