@@ -4,54 +4,6 @@
 trigger:
 - master
 
-jobs:
-- job: msvc_2017_Release_x64
-  timeoutInMinutes: 0
-  pool:
-    vmImage: vs2017-win2016
-  steps:
-  - script: |
-      set
-      mkdir release_x64
-      mkdir logs
-      pushd release_x64
-      call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-      cmake -DWITH_WEBKIT=NO -DWITH_MYSQL_PLUGIN=NO -G "Visual Studio 15 2017 Win64" ..
-      popd
-    displayName: 'Configure CMake Generator for VS2017'
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.6'
-  - script: python ci\pype.py logs\log_Core.txt -- cmake --build release_x64 --config Release --target CsCore --verbose
-    displayName: 'Build Core'
-  - script: python ci\pype.py logs\log_Network.txt -- cmake --build release_x64 --config Release --target CsNetwork --verbose
-    displayName: 'Build Network'
-  - script: python ci\pype.py logs\log_Xml.txt -- cmake --build release_x64 --config Release --target CsXml --verbose
-    displayName: 'Build Xml'
-  - script: python ci\pype.py logs\log_Gui.txt -- cmake --build release_x64 --config Release --target CsGui --verbose
-    displayName: 'Build Gui'
-  - script: python ci\pype.py logs\log_Svg.txt -- cmake --build release_x64 --config Release  --target CsSvg --verbose
-    displayName: 'Build Svg'
-  - script: python ci\pype.py logs\log_OpenGL.txt -- cmake --build release_x64 --config Release  --target CsOpenGL --verbose
-    displayName: 'Build OpenGL'
-  - script: python ci\pype.py logs\log_Multimedia.txt -- cmake --build release_x64 --config Release --target CsMultimedia --verbose
-    displayName: 'Build Multimedia'
-  - script: python ci\pype.py logs\log_Script.txt -- cmake --build release_x64 --config Release --target CsScript --verbose
-    displayName: 'Build Script'
-  - script: python ci\pype.py logs\log_Sql.txt -- cmake --build release_x64 --config Release --target CsSql --verbose
-    displayName: 'Build Sql'
-  - script: python ci\pype.py logs\log_XmlPatterns.txt -- cmake --build release_x64 --config Release --target CsXmlPatterns --verbose
-    displayName: 'Build XmlPatterns'
-  - script: python ci\pype.py logs\log_leftovers.txt -- cmake --build release_x64 --config Release --verbose
-    displayName: 'Build leftovers'
-  - publish: $(System.DefaultWorkingDirectory)/logs
-    artifact: logs_vs2017
-    
-# note the next job is called 'Release_x64', however its temporarly targeting 32-bit (vcvars32.bat), because 
-# of heap limitations on azure pipelines 
-# see https://developercommunity.visualstudio.com/content/problem/966631/fatal-error-c1060-compiler-is-out-of-heap-space-1.html
-#
-
 - job: msvc_2019_Release_x64
   timeoutInMinutes: 0
   pool:
@@ -68,15 +20,16 @@ jobs:
       mkdir logs
       mkdir release_x64
       pushd release_x64
-      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=%SRC%\copperspice-libaries\lib\cmake\Catch2 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
-      popd
-      python ci\pype.py logs\cs_2019.txt -- cmake --build release_x64 --verbose
-      python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build release_x64 --target CsGui --verbose
-      python ci\pype.py logs\cs_2019_finish.txt -- cmake --build release_x64 --verbose
+      echo "CL version"
+      cl
+      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=%SRC%\copperspice-libaries\lib\cmake\Catch2 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G "Visual Studio 16 2019" -A ..
+      python ci\pype.py logs\cs_2019.txt -- cmake --build . --verbose
+      python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build . --target CsGui --verbose
+      python ci\pype.py logs\cs_2019_finish.txt -- cmake --build . --verbose
       ctest
     displayName: 'Build using VS2019 via Ninja - Release'
   - publish: $(System.DefaultWorkingDirectory)/logs
-    artifact: logs_vs2019
+    artifact: logs_vs2019_release
 
 
 - job: msvc_2019_Debug_x64
@@ -95,17 +48,18 @@ jobs:
       mkdir logs
       mkdir debug_x64
       pushd debug_x64
+      echo "CMake version:"
+      cmake --version
+      echo "Ninja version:"
+      ninja --version
       cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=%SRC%\copperspice-libaries\lib\cmake\Catch2 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
-      popd
-      python ci\pype.py logs\cs_2019.txt -- cmake --build debug_x64 --verbose
-      python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build debug_x64 --target CsGui --verbose
-      python ci\pype.py logs\cs_2019_finish.txt -- cmake --build debug_x64 --verbose
+      python ci\pype.py logs\cs_2019.txt -- cmake --build . --verbose
+      python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build . --target CsGui --verbose
+      python ci\pype.py logs\cs_2019_finish.txt -- cmake --build . --verbose
       ctest
     displayName: 'Build using VS2019 via Ninja - Debug'
   - publish: $(System.DefaultWorkingDirectory)/logs
-    artifact: logs_vs2019
-
-
+    artifact: logs_vs2019_debug
 
 
 - job: Ubuntu_18_04_Release_x64
