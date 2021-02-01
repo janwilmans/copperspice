@@ -61,20 +61,52 @@ jobs:
     inputs:
       versionSpec: '3.6'
   - script: |
+      set SRC=%cd%
       call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
       rd /s /q c:\mysql-5.7.21-winx64
       set
       mkdir logs
       mkdir release_x64
       pushd release_x64
-      cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
+      cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=%SRC%\copperspice-libaries\lib\cmake\Catch2 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
       popd
       python ci\pype.py logs\cs_2019.txt -- cmake --build release_x64 --verbose
       python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build release_x64 --target CsGui --verbose
       python ci\pype.py logs\cs_2019_finish.txt -- cmake --build release_x64 --verbose
-    displayName: 'Build using VS2019 via Ninja'
+      ctest
+    displayName: 'Build using VS2019 via Ninja - Release'
   - publish: $(System.DefaultWorkingDirectory)/logs
     artifact: logs_vs2019
+
+
+- job: msvc_2019_Debug_x64
+  timeoutInMinutes: 0
+  pool:
+    vmImage: 'windows-2019'
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.6'
+  - script: |
+      set SRC=%cd%
+      call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      rd /s /q c:\mysql-5.7.21-winx64
+      set
+      mkdir logs
+      mkdir debug_x64
+      pushd debug_x64
+      cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DCMAKE_PREFIX_PATH=%SRC%\copperspice-libaries\lib\cmake\Catch2 -DCMAKE_IGNORE_PATH="C:/ProgramData/chocolatey/bin/;C:/Strawberry/c/bin/" -G Ninja ..
+      popd
+      python ci\pype.py logs\cs_2019.txt -- cmake --build debug_x64 --verbose
+      python ci\pype.py logs\cs_2019_j1_gui.txt -- cmake -j 1 --build debug_x64 --target CsGui --verbose
+      python ci\pype.py logs\cs_2019_finish.txt -- cmake --build debug_x64 --verbose
+      ctest
+    displayName: 'Build using VS2019 via Ninja - Debug'
+  - publish: $(System.DefaultWorkingDirectory)/logs
+    artifact: logs_vs2019
+
+
+
 
 - job: Ubuntu_18_04_Release_x64
   timeoutInMinutes: 0
