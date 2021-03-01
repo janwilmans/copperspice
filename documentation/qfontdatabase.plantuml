@@ -1,0 +1,32 @@
+@startuml
+QPlatformFontDatabase <|-- QCoreTextFontDatabase 
+note on link #green: cocoa/mac
+
+QPlatformFontDatabase <|-- QBasicFontDatabase
+QBasicFontDatabase <|-- QFontconfigDatabase 
+note on link #green: xcb / linux
+
+QBasicFontDatabase <|-- QWindowsFontDatabaseFT
+QPlatformFontDatabase <|-- QWindowsFontDatabase
+
+QPlatformFontDatabase : populateFontDatabase()
+QBasicFontDatabase : populateFontDatabase()
+QCoreTextFontDatabase : populateFontDatabase()
+QWindowsFontDatabase : populateFontDatabase()
+QWindowsFontDatabaseFT : populateFontDatabase()
+QFontconfigDatabase : populateFontDatabase()
+
+QPlatformFontDatabase : {static} registerFont(...)
+QPlatformFontDatabase : {static} registerFontFamily(name)
+QPlatformFontDatabase : {static} registerAliasToFontFamily()
+
+QPlatformFontDatabase : populateFamily(QString)
+QWindowsFontDatabase : populateFamily(QString)
+QWindowsFontDatabase : populateFamily(QString, bool)
+QWindowsFontDatabaseFT : populateFamily(QString)
+QCoreTextFontDatabase : populateFamily(QString)
+
+QtFontFamily --> QPlatformFontDatabase : populateFamily(m_name)
+
+' xcb/fonts/QFontconfigDatabase
+@enduml
