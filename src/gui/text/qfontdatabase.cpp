@@ -400,7 +400,8 @@ struct QtFontFamily {
 QtFontFoundry *QtFontFamily::foundry(const QString &familyName, bool create)
 {
    if (familyName.isEmpty() && m_foundries.size() == 1) {
-      return &m_foundries[0];
+      auto iter = m_foundries.begin();
+      return &iter.value();
    }
 
    const auto key = familyName.toCaseFolded();
@@ -1052,9 +1053,9 @@ static unsigned int bestFoundry(int script, unsigned int score, int styleStrateg
 {
    (void) script;
 
-   desc->foundry = 0;
-   desc->style   = 0;
-   desc->size    = 0;
+   desc->foundry = nullptr;
+   desc->style   = nullptr;
+   desc->size    = nullptr;
 
    for (QtFontFoundry &fontFoundry : family->m_foundries) {
       if (! foundryName.isEmpty() && fontFoundry.m_fontMfg.compare(foundryName, Qt::CaseInsensitive) != 0) {
@@ -1207,10 +1208,10 @@ QtFontFamily *match(int script, const QFontDef &request, const QString &familyNa
       pitch = 'm';
    }
 
-   desc->family  = 0;
-   desc->foundry = 0;
-   desc->style   = 0;
-   desc->size    = 0;
+   desc->family  = nullptr;
+   desc->foundry = nullptr;
+   desc->style   = nullptr;
+   desc->size    = nullptr;
 
    unsigned int score = ~0u;
 
@@ -1245,7 +1246,7 @@ QtFontFamily *match(int script, const QFontDef &request, const QString &familyNa
       uint newscore = bestFoundry(script, score, request.styleStrategy,
                   test.family, foundryName, styleKey, request.pixelSize, pitch, &test, request.styleName);
 
-      if (test.foundry == 0 && ! foundryName.isEmpty()) {
+      if (test.foundry == nullptr && ! foundryName.isEmpty()) {
          // the specific foundry was not found, so look for
          // any foundry matching our requirements
 

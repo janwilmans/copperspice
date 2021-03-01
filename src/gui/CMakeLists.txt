@@ -33,6 +33,7 @@ include_directories(
    ${CMAKE_CURRENT_SOURCE_DIR}/image
    ${CMAKE_CURRENT_SOURCE_DIR}/itemviews
    ${CMAKE_CURRENT_SOURCE_DIR}/kernel
+   ${CMAKE_CURRENT_SOURCE_DIR}/layout
    ${CMAKE_CURRENT_SOURCE_DIR}/math3d
    ${CMAKE_CURRENT_SOURCE_DIR}/painting
    ${CMAKE_CURRENT_SOURCE_DIR}/platform
@@ -41,7 +42,9 @@ include_directories(
    ${CMAKE_CURRENT_SOURCE_DIR}/styles
    ${CMAKE_CURRENT_SOURCE_DIR}/text
    ${CMAKE_CURRENT_SOURCE_DIR}/util
+   ${CMAKE_CURRENT_SOURCE_DIR}/widgetbase
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
+
 
    ${CMAKE_SOURCE_DIR}/src/3rdparty/freetype/include
    ${CMAKE_SOURCE_DIR}/src/3rdparty/freetype/include/freetype
@@ -71,6 +74,7 @@ include(graphicsview/graphicsview.cmake)
 include(image/image.cmake)
 include(itemviews/itemviews.cmake)
 include(kernel/kernel.cmake)
+include(layout/layout.cmake)
 include(math3d/math3d.cmake)
 include(painting/painting.cmake)
 include(opengl/opengl.cmake)
@@ -81,6 +85,7 @@ include(statemachine/statemachine.cmake)
 include(styles/styles.cmake)
 include(text/text.cmake)
 include(util/util.cmake)
+include(widgetbase/widgetbase.cmake)
 include(widgets/widgets.cmake)
 
 macro_generate_public("${GUI_PUBLIC_INCLUDES}" QtGui)

@@ -22,14 +22,16 @@
 ***********************************************************************/
 
 #include <qgraphicseffect_p.h>
-#include <qgraphicsitem_p.h>
+
 #include <qgraphicsitem.h>
 #include <qimage.h>
 #include <qpainter.h>
 #include <qpaintengine.h>
 #include <qrect.h>
 #include <qdebug.h>
+
 #include <qdrawhelper_p.h>
+#include <qgraphics_item_p.h>
 
 #ifndef QT_NO_GRAPHICSEFFECT
 
@@ -204,7 +206,7 @@ QGraphicsEffect::QGraphicsEffect(QGraphicsEffectPrivate &dd, QObject *parent)
 QGraphicsEffect::~QGraphicsEffect()
 {
    Q_D(QGraphicsEffect);
-   d->setGraphicsEffectSource(0);
+   d->setGraphicsEffectSource(nullptr);
 }
 
 QRectF QGraphicsEffect::boundingRect() const

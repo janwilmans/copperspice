@@ -151,10 +151,34 @@ TEST_CASE("QString8 find", "[qstring]")
    }
 
    {
-      auto iter  = str1.find_fast("day");
+      auto iter = str1.find_fast("day");
       QString str2(iter, str1.end());
 
       REQUIRE(str2 == "day you can see forever");
+   }
+}
+
+TEST_CASE("QString8 index_of_fast", "[qstring]")
+{
+   QString str1 = "On a clear Day\0 you can see forever";
+
+   {
+      auto iter = str1.indexOfFast("dAY", str1.cbegin(), Qt::CaseInsensitive);
+      QString str2(iter, str1.end());
+
+      REQUIRE(str2 == "Day\0 you can see forever");
+   }
+}
+
+TEST_CASE("QString8 last_index_of_fast", "[qstring]")
+{
+   QString str1 = "On a clear Day\0 you can see forever";
+
+   {
+      auto iter = str1.lastIndexOfFast("dAY", str1.cbegin(), Qt::CaseInsensitive);
+      QString str2(iter, str1.end());
+
+      REQUIRE(str2 == "Day\0 you can see forever");
    }
 }
 

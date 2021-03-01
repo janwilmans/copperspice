@@ -223,6 +223,8 @@ class Q_CORE_EXPORT QString8 : public CsString::CsString
       QString8(const QString8 &other) = default;
       QString8(QString8 &&other) = default;
 
+      QString8(std::nullptr_t) = delete;
+
       QString8(QChar32 c);
       QString8(size_type numOfChars, QChar32 c);
 
@@ -806,9 +808,9 @@ class Q_CORE_EXPORT QString8 : public CsString::CsString
       }
 
       template <typename SP = QStringParser, typename ...Ts>
-      [[nodiscard]] QString8 formatArgs(Ts... args) const
+      [[nodiscard]] QString8 formatArgs(Ts&&... args) const
       {
-         return SP::template formatArgs<QString8>(*this, args...);
+         return SP::template formatArgs<QString8>(*this, std::forward<Ts>(args)...);
       }
 
       template <typename V, typename SP = QStringParser>

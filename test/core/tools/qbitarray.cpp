@@ -21,23 +21,17 @@
 
 #include <cs_catch2.h>
 
-TEST_CASE("QBitArray empty", "[qbitarray]")
+TEST_CASE("QBitArray at", "[qbitarray]")
 {
-   QBitArray data;
+   QBitArray data1(3, true);
+   REQUIRE(data1.at(0));
+   REQUIRE(data1.at(1));
+   REQUIRE(data1.at(2));
 
-   REQUIRE(data.isEmpty());
-   REQUIRE(data.isNull());
-}
-
-TEST_CASE("QBitArray size", "[qbitarray]")
-{
-   int size = 20;
-
-   QBitArray data(size, true);
-
-   REQUIRE(data.size() == size);
-   REQUIRE(! data.isEmpty());
-   REQUIRE(data.isNull() == false);
+   QBitArray data2(3, false);
+   REQUIRE(! data2.at(0));
+   REQUIRE(! data2.at(1));
+   REQUIRE(! data2.at(2));
 }
 
 TEST_CASE("QBitArray clear", "[qbitarray]")
@@ -49,6 +43,92 @@ TEST_CASE("QBitArray clear", "[qbitarray]")
 
    REQUIRE(data.isEmpty());
    REQUIRE(data.isNull());
+}
+
+TEST_CASE("QBitArray empty", "[qbitarray]")
+{
+   QBitArray data;
+
+   REQUIRE(data.isEmpty());
+   REQUIRE(data.isNull());
+}
+
+TEST_CASE("QBitArray fill", "[qbitarray]")
+{
+   int size = 17;
+
+   QBitArray data(size, true);
+   data.fill(false, 31);
+
+   REQUIRE(! data.isEmpty());
+   REQUIRE(data.isNull() == false);
+}
+
+TEST_CASE("QBitArray operator_a", "[qbitarray]")
+{
+   int size = 16;
+
+   QBitArray data1(8, true);
+   QBitArray data2(size, false);
+
+   data2.setBit(1);
+   data1 &= data2;
+
+   REQUIRE(data1.testBit(1));
+   REQUIRE(! data1.testBit(size - 1));
+}
+
+TEST_CASE("QBitArray operator_b", "[qbitarray]")
+{
+   QBitArray data1(7, true);
+   QBitArray data2(7, true);
+
+   REQUIRE(data1 == data2);
+}
+
+TEST_CASE("QBitArray operator_c", "[qbitarray]")
+{
+   QBitArray data1(13, true);
+   QBitArray data2(13, false);
+
+   data2 ^= data1;
+
+   REQUIRE(data1 == data2);
+}
+
+TEST_CASE("QBitArray operator", "[qbitarray]")
+{
+   QBitArray data1(3, true);
+   REQUIRE(data1[0]);
+   REQUIRE(data1[1]);
+   REQUIRE(data1[2]);
+
+   QBitArray data2(3, false);
+   REQUIRE(! data2[0]);
+   REQUIRE(! data2[1]);
+   REQUIRE(! data2[2]);
+}
+
+TEST_CASE("QBitArray resize", "[qbitarray]")
+{
+   int size = 17;
+
+   QBitArray data(size, true);
+   data.resize(0);
+
+   REQUIRE(data.isEmpty());
+   REQUIRE(data.isNull() == false);
+}
+
+TEST_CASE("QBitArray size", "[qbitarray]")
+{
+   int size = 20;
+
+   QBitArray data(size, true);
+
+   REQUIRE(data.size() == size);
+   REQUIRE(! data.isEmpty());
+   REQUIRE(data.isNull() == false);
 }
 
 TEST_CASE("QBitArray setbit_lowest", "[qbitarray]")
@@ -75,60 +155,6 @@ TEST_CASE("QBitArray setbit_highest", "[qbitarray]")
    REQUIRE(data.isNull() == false);
 }
 
-TEST_CASE("QBitArray fill", "[qbitarray]")
-{
-   int size = 17;
-
-   QBitArray data(size, true);
-   data.fill(false, 31);
-
-   REQUIRE(! data.isEmpty());
-   REQUIRE(data.isNull() == false);
-}
-
-TEST_CASE("QBitArray resize", "[qbitarray]")
-{
-   int size = 17;
-
-   QBitArray data(size, true);
-   data.resize(0);
-
-   REQUIRE(data.isEmpty());
-   REQUIRE(data.isNull() == false);
-}
-
-TEST_CASE("QBitArray operator&=", "[qbitarray]")
-{
-   int size = 16;
-
-   QBitArray data1(8, true);
-   QBitArray data2(size, false);
-
-   data2.setBit(1);
-   data1 &= data2;
-
-   REQUIRE(data1.testBit(1));
-   REQUIRE(! data1.testBit(size - 1));
-}
-
-TEST_CASE("QBitArray operator==", "[qbitarray]")
-{
-   QBitArray data1(7, true);
-   QBitArray data2(7, true);
-
-   REQUIRE(data1 == data2);
-}
-
-TEST_CASE("QBitArray operator^=", "[qbitarray]")
-{
-   QBitArray data1(13, true);
-   QBitArray data2(13, false);
-
-   data2 ^= data1;
-
-   REQUIRE(data1 == data2);
-}
-
 TEST_CASE("QBitArray swap", "[qbitarray]")
 {
    QBitArray data1(11, true);
@@ -142,30 +168,4 @@ TEST_CASE("QBitArray swap", "[qbitarray]")
 
    REQUIRE(data1 == data2);
    REQUIRE(data1 != data3);
-}
-
-TEST_CASE("QBitArray operator", "[qbitarray]")
-{
-   QBitArray data1(3, true);
-   REQUIRE(data1[0]);
-   REQUIRE(data1[1]);
-   REQUIRE(data1[2]);
-
-   QBitArray data2(3, false);
-   REQUIRE(! data2[0]);
-   REQUIRE(! data2[1]);
-   REQUIRE(! data2[2]);
-}
-
-TEST_CASE("QBitArray at", "[qbitarray]")
-{
-   QBitArray data1(3, true);
-   REQUIRE(data1.at(0));
-   REQUIRE(data1.at(1));
-   REQUIRE(data1.at(2));
-
-   QBitArray data2(3, false);
-   REQUIRE(! data2.at(0));
-   REQUIRE(! data2.at(1));
-   REQUIRE(! data2.at(2));
 }

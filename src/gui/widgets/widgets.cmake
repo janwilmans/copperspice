@@ -1,8 +1,4 @@
 list(APPEND GUI_PUBLIC_INCLUDES
-   QAbstractButton
-   QAbstractScrollArea
-   QAbstractSlider
-   QAbstractSpinBox
    QButtonGroup
    QCalendarWidget
    QCheckBox
@@ -58,10 +54,6 @@ list(APPEND GUI_PUBLIC_INCLUDES
 )
 
 list(APPEND GUI_INCLUDES
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractbutton.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractscrollarea.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractslider.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractspinbox.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qbuttongroup.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qcalendarwidget.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qcheckbox.h
@@ -119,14 +111,9 @@ list(APPEND GUI_INCLUDES
 )
 
 list(APPEND GUI_PRIVATE_INCLUDES
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractbutton_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractscrollarea_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractslider_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractspinbox_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qbuttongroup_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qcombobox_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdatetimeedit_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdockarealayout_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdockwidget_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qeffects_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qframe_p.h
@@ -134,7 +121,6 @@ list(APPEND GUI_PRIVATE_INCLUDES
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qlabel_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qlinecontrol_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qlineedit_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmainwindowlayout_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmdiarea_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmdisubwindow_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmenu_p.h
@@ -147,19 +133,12 @@ list(APPEND GUI_PRIVATE_INCLUDES
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtabbar_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtextedit_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbar_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbararealayout_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbarextension_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbarlayout_p.h
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbarseparator_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qwidgetanimator_p.h
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qwidgetresizehandler_p.h
 )
 
 target_sources(CsGui
    PRIVATE
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractbutton.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractslider.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractspinbox.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qbuttongroup.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qcalendarwidget.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qcheckbox.cpp
@@ -169,8 +148,8 @@ target_sources(CsGui
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdial.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdialogbuttonbox.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdockwidget.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qdockarealayout.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qeffects.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qfocusframe.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qfontcombobox.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qframe.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qgroupbox.cpp
@@ -181,15 +160,16 @@ target_sources(CsGui
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qlineedit.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qlinecontrol.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmainwindow.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmainwindowlayout.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmdiarea.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmdisubwindow.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmenu.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qmenubar.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qplaintextedit.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qprogressbar.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qpushbutton.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qradiobutton.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qrubberband.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qscrollarea.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qscrollbar.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qsizegrip.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qslider.cpp
@@ -203,19 +183,11 @@ target_sources(CsGui
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtextedit.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtextbrowser.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbar.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbarlayout.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbarextension.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbarseparator.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbox.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbutton.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qvalidator.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qabstractscrollarea.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qwidgetresizehandler.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qfocusframe.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qscrollarea.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qwidgetanimator.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qtoolbararealayout.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/widgets/qplaintextedit.cpp
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
